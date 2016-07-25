@@ -157,16 +157,17 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         /*
-         * IDEHelper...
+         * IDEHelper
          */
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         Barryvdh\Debugbar\ServiceProvider::class,
         Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class,
 
         /*
-        *  Socialite Helper 
-        */
-         Laravel\Socialite\SocialiteServiceProvider::class
+         *  Socialite Helper 
+         */
+         Laravel\Socialite\SocialiteServiceProvider::class,
+
     ],
 
     /*
@@ -213,7 +214,8 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'Debugbar' => Barryvdh\Debugbar\Facade::class,
-        'Socialite' => Laravel\Socialite\Facades\Socialite::class
-    ],
+        'Socialite' => Laravel\Socialite\Facades\Socialite::class,
+        
+    ],  
 
 ];
