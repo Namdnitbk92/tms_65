@@ -13,11 +13,25 @@ class CourseRepository extends BaseRepository
     protected $trainee;
     protected $subject;
     protected $task;
+    public $exportConfig;
 
     public function __construct(Course $course, Subject $subject)
     {
         $this->model = $course;
         $this->subject = $subject;
+        $this->exportConfig = app()->make('stdClass');
+        $this->exportConfig->name = trans('course.export.name');
+        $this->exportConfig->creator = trans('course.export.creator');
+        $this->exportConfig->company = trans('course.export.company');
+        $this->exportConfig->fields = [
+            trans('label.id'),
+            trans('label.name'),
+            trans('label.description'),
+            trans('label.start_date'),
+            trans('label.end_date'),
+            trans('label.image'),
+            trans('label.status'),
+        ];
     }
 
     public function store($data)

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Course extends Model
 {
     protected $fillable = [
+        'id',
         'name',
         'description',
         'start_date',
@@ -14,6 +15,11 @@ class Course extends Model
         'image_url',
         'status',
     ];
+
+    public function getColumn()
+    {
+        return $this->fillable;
+    }
 
     public function course_subjects()
     {

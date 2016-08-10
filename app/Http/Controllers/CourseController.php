@@ -6,14 +6,32 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Repositories\Course\CourseRepository;
 use Mockery\CountValidator\Exception;
+use App\Services\ExportUtils;
+use App\Models\Course;
 
 class CourseController extends Controller
 {
     protected $courseRepository;
+    protected $config;
 
-    public function __construct(CourseRepository $courseRepository)
+    use ExportUtils;
+
+    public function __construct(CourseRepository $courseRepository, Course $course)
     {
         $this->courseRepository = $courseRepository;
+        $this->config = app()->make('stdClass');
+        $this->config->model = $course;
+        $this->middleware('auth');
+    }
+
+    public function exportExcel()
+    {
+        $this->buildExcel($this->courseRepository, route('admin.courses.index'));
+    }
+
+    public function exportCSV()
+    {
+        $this->buildCSV($this->courseRepository, route('admin.courses.index'));
     }
 
     /**
@@ -67,10 +85,10 @@ class CourseController extends Controller
         $data['subjectList'] = explode(',', $data['subjectData']);
         $result = $this->courseRepository->store($data);
         if ($result == false) {
-            return redirect()->route('courses.index')->withErrors($result);
+            return redirect()->route('admin.courses.index')->withErrors($result);
         }
 
-        return redirect()->route('courses.index')
+        return redirect()->route('admin.courses.index')
             ->withSuccess(trans('message.create_course_successfully'));
     }
 
@@ -127,11 +145,11 @@ class CourseController extends Controller
         $subjects = $request->input('subjectData');
         $result = $this->courseRepository->update($data, $subjects, $id);
         if (!$result) {
-            return redirect()->route('courses.edit', ['courses' => $id])
+            return redirect()->route('admin.courses.edit', ['courses' => $id])
                 ->withErrors(trans('message.update_error'));
         }
 
-        return redirect()->route('courses.edit', ['courses' => $id])
+        return redirect()->route('admin.courses.edit', ['courses' => $id])
             ->withSuccess(trans('message.update_course_successfully'));
     }
 
@@ -145,11 +163,11 @@ class CourseController extends Controller
     {
         $result = $this->courseRepository->destroy($id);
         if (!$result) {
-            return redirect()->route('courses.index')
+            return redirect()->route('admin.courses.index')
                 ->withErrors(trans('message.delete_error'));
         }
 
-        return redirect()->route('courses.index')
+        return redirect()->route('admin.courses.index')
             ->withSuccess(trans('message.delete_course_successfully'));
     }
 

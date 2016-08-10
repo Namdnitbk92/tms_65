@@ -21,7 +21,7 @@
                 <div class="panel-heading">
                     <h3>{{ trans('course.course_list') }}</h3>
                     <i class="fa fa-refresh"
-                       onclick="courseBuilder.utils().redirect(&quot;{{ route('courses.index') }}&quot;)"></i>
+                       onclick="courseBuilder.utils().redirect(&quot;{{ route('admin.courses.index') }}&quot;, 'none')"></i>
                 </div>
                 <div class="panel-body">
                     @include('suppervisor.course.grid')

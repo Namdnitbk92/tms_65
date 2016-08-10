@@ -2,10 +2,16 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header panel-heading">
-                <h4 class="modal-title ">@yield('modal-title')</h4>
+                <h4 class="modal-title ">
+                    @if(isset($title))
+                        {{ $title }}
+                    @endif
+                </h4>
             </div>
             <div class="modal-body">
-                @yield('modal-body')
+                @if(isset($content))
+                    {{ $content }}
+                @endif
             </div>
             <div class="modal-footer">
                 <button class="btn btn-primary btn-confirm">

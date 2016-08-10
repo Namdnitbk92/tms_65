@@ -92,10 +92,14 @@ var appBuilder = function () {
             return !_.isUndefined(val) && !_.isNull(val);
         };
 
-        this.redirect = function (url) {
+        this.redirect = function (url, type) {
             if (_.isNull(url) || _.isUndefined(url))
                 return;
-            window.open(url, '_blank');
+            if (this.isset(type)) {
+                window.location.href = url;
+            } else {
+                window.open(url, '_blank');
+            }
         };
 
         this.validate = function (config) {
@@ -169,7 +173,6 @@ var loginBuilder = (function (appBuilder) {
             this.bindEvent();
         }
     }
-
 }(appBuilder))
 
 var courseBuilder = (function () {
@@ -200,12 +203,6 @@ var courseBuilder = (function () {
                 },
             ];
             course.tooltip(configs);
-        },
-        animate: function () {
-            course.animate([{
-                animate: $('.body-content'),
-                animateName: 'shake'
-            }]);
         },
         bindEvent: function () {
             $('form[id="delRoute"]').submit(function (e) {
@@ -251,7 +248,7 @@ var courseBuilder = (function () {
                     }).done(function (res) {
                         setTimeout(function () {
                             for (var c in courses) {
-                                $('tr.row-' + parseInt(courses[c])).addClass('hide');
+                                $('tr.row-' + parseInt(courses[c])).remove();
                             }
                             localStorage.clear();
                             course.utils.loading('hide');
@@ -366,8 +363,6 @@ var courseBuilder = (function () {
                     }
                 }
             }());
-
-
         },
         saveSelect: function (id) {
             localStorage.setItem('selected', id);
@@ -404,7 +399,6 @@ var courseBuilder = (function () {
         build: function () {
             localStorage.clear();
             this.tooltip();
-            this.animate();
             this.bindEvent();
         }
     }
@@ -419,73 +413,4 @@ $(document).ready(function () {
     courseBuilder.build();
 })
 
-// select multi
-$("#data_grid").on('click', '#checkAll', function () {
-    $('.case').prop('checked', this.checked);
-});
-
-$(".case").click(function () {
-    if ($(".case").length == $(".case:checked").length) {
-        $("#checkAll").prop("checked", "checked");
-    } else {
-        $("#checkAll").removeAttr("checked");
-    }
-});
-
-//  Delete multi subject
-$('#btn_del_subject').click(function () {
-    var ids = [];
-    $('.case:checked').each(function () {
-        ids.push($(this).val());
-    });
-
-    if (ids.length === 0) { //tell you if the array is empty
-        alert("No subjects were selected?");
-    } else {
-        if (!confirm("Are you sure you want to delete this?")) {
-            return false;
-        } else {
-            $.ajax({
-                url: 'subjects/delete_multi',
-                type: 'POST',
-                data: {id: ids},
-                dateType: 'json',
-                success: function (response) {
-                    $('#data_grid').html(response['view']);
-                    alert("Delete multi subjects success!");
-                }
-            });
-
-            return true;
-        }
-    }
-});
-
-// Dellete multi tasks
-$('#btn_del_task').click(function () {
-    var ids = [];
-    $('.case:checked').each(function () {
-        ids.push($(this).val());
-    });
-
-    if (ids.length === 0) { //tell you if the array is empty
-        alert("No subjects were selected?");
-    } else {
-        if (!confirm("Are you sure you want to delete this?")) {
-            return false;
-        } else {
-            $.ajax({
-                url: 'tasks/delete_multi',
-                type: 'POST',
-                data: {id: ids},
-                dateType: 'json',
-                success: function (response) {
-                    $('#data_grid').html(response['view']);
-                    alert("Delete multi subjects success!");
-                }
-            });
-
-            return true;
-        }
-    }
-});
+//# sourceMappingURL=all.js.map

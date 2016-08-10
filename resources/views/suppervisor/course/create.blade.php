@@ -7,7 +7,7 @@
             <h2 class="ui dividing header blue">
                 {{ trans('course.course_information') }}
             </h2>
-            {{ Form::open(['url' => (empty($course) ? route('courses.store') : route('courses.update', ['course' => $course->id])), 'method' => (empty($course) ? 'POST' : 'PUT'), 'class' => 'ui form', 'name' => 'CI']) }}
+            {{ Form::open(['url' => (empty($course) ? route('admin.courses.store') : route('admin.courses.update', ['course' => $course->id])), 'method' => (empty($course) ? 'POST' : 'PUT'), 'class' => 'ui form', 'name' => 'CI']) }}
             <div class="field">
                 <div class="two fields">
                     <div class="field">

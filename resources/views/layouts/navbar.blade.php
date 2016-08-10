@@ -14,7 +14,7 @@
                 </a>
             </li>
             <li>
-                <a href="{{ route('courses.index') }}">
+                <a href="{{ route('admin.courses.index') }}">
                     <i class="fa fa-table fa-fw"></i>
                     {{ trans('label.course') }}
                 </a>

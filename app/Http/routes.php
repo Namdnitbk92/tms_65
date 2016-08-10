@@ -23,6 +23,28 @@ Route::group(['middleware' => 'web'], function () {
     Route::group(['prefix' => 'admin'], function () {
         Route::resource('trainees', 'TraineeController');
 
+        Route::resource('courses', 'CourseController');
+
+        Route::post('courses/search', [
+            'as' => 'search',
+            'uses' => 'CourseController@search'
+        ]);
+
+        Route::post('courses/destroySelected', [
+            'as' => 'destroySelected',
+            'uses' => 'CourseController@destroySelected'
+        ]);
+
+        Route::get('course/exportExcel', [
+            'as' => 'exportExcel',
+            'uses' => 'CourseController@exportExcel'
+        ]);
+
+        Route::get('course/exportCSV', [
+            'as' => 'exportCSV',
+            'uses' => 'CourseController@exportCSV'
+        ]);
+
         Route::group(['namespace' => 'Admin'], function () {
             Route::resource('subjects', 'SubjectController');
 
@@ -39,18 +61,6 @@ Route::group(['middleware' => 'web'], function () {
             ]);
         });
     });
-
-    Route::resource('courses', 'CourseController');
-
-    Route::get('courses/search', [
-        'as' => 'search',
-        'uses' => 'CourseController@search'
-    ]);
-
-    Route::post('courses/destroySelected', [
-        'as' => 'destroySelected',
-        'uses' => 'CourseController@destroySelected'
-    ]);
 
     Route::group(['prefix' => 'login'], function () {
         Route::get('social/{network}', [

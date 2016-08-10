@@ -92,10 +92,14 @@ var appBuilder = function () {
             return !_.isUndefined(val) && !_.isNull(val);
         };
 
-        this.redirect = function (url) {
+        this.redirect = function (url, type) {
             if (_.isNull(url) || _.isUndefined(url))
                 return;
-            window.open(url, '_blank');
+            if (this.isset(type)) {
+                window.location.href = url;
+            } else {
+                window.open(url, '_blank');
+            }
         };
 
         this.validate = function (config) {
@@ -200,12 +204,6 @@ var courseBuilder = (function () {
             ];
             course.tooltip(configs);
         },
-        animate: function () {
-            course.animate([{
-                animate: $('.body-content'),
-                animateName: 'shake'
-            }]);
-        },
         bindEvent: function () {
             $('form[id="delRoute"]').submit(function (e) {
                 e.preventDefault();
@@ -238,7 +236,7 @@ var courseBuilder = (function () {
                 }
                 if (!course.utils.isset(selected) && courses !== undefined) {
                     $.ajax({
-                        url: 'destroySelected',
+                        url: 'courses/destroySelected',
                         data: {
                             ids: courses
                         },
@@ -401,7 +399,6 @@ var courseBuilder = (function () {
         build: function () {
             localStorage.clear();
             this.tooltip();
-            this.animate();
             this.bindEvent();
         }
     }

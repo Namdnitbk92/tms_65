@@ -61,7 +61,7 @@
             </div>
             <div class="two field">
                 <div class="field f-right">
-                    <button type="submit" class="ui facebook blue icon button" onclick="courseBuilder.utils().redirect(&quot;{{ route('courses.index') }}&quot;)">
+                    <button type="submit" class="ui facebook blue icon button" onclick="courseBuilder.utils().redirect(&quot;{{ route('admin.courses.index') }}&quot;, 'none')">
                         <i class="left arrow icon"></i> {{ trans('label.back') }}
                     </button>
                 </div>

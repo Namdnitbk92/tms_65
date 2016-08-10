@@ -40,4 +40,6 @@ return [
     'cancel' => 'Cancel',
     'back' => 'Back',
     'ok' => 'Ok',
+    'confirm' => 'Are you sure?',
+    'image' => 'Images',
 ];
