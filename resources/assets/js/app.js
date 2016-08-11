@@ -1,5 +1,28 @@
 var appBuilder = function () {
 
+    this.initLib = function () {
+        window.fbAsyncInit = function() {
+            FB.init({
+                appId      : '275578219472356',
+                xfbml      : true,
+                version    : 'v2.7'
+            });
+        };
+
+        (function(d, s, id){
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) {return;}
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/en_US/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+
+        $.ajaxSetup({
+            headers: {'X-CSRF-Token': $('meta[name=_token]').attr('content')}
+        });
+
+    }
+
     this.tooltip = function (configs) {
         if (_.isNull(configs) || _.isUndefined(configs)) {
             return;
@@ -348,8 +371,26 @@ var courseBuilder = (function () {
                         data.push($(input[i]).val());
                     }
                 }
+                if(total_trainee !== undefined && total_trainee != null) {
+                    $('input[name="userInCourses"]').val(total_trainee);
+                }
                 $('input[name="subjectData"]').val(data);
                 $('form[name="CI"]').submit();
+            });
+
+            $('.share-fb-btn').click(function(){
+                if(course.utils.isset(FB)) {
+                    FB.ui({
+                        method: 'feed',
+                        display: 'popup',
+                        link: 'http://laravel.dev/Project1/tms/public/course',
+                        caption: 'Course List',
+                        redirect_uri : 'http://laravel.dev/Project1/tms/public/course',
+                        name : 'Laravel dev',
+                        description : 'This is course list',
+                        picture : 'http://www.phpgang.com/wp-content/themes/PHPGang_v2/img/logo.png',
+                    }, function(response){});
+                }
             });
 
             (function () {
@@ -393,6 +434,11 @@ var courseBuilder = (function () {
                 }
             }
         },
+        openAssign: function (courseName, courseId)  {
+            $('#assignModal').modal('show');
+            $('course').text(courseName);
+            $('#assignModal').attr('course-current', courseId);
+        },
         utils: function () {
             return course.utils;
         },
@@ -406,9 +452,7 @@ var courseBuilder = (function () {
 }(appBuilder))
 
 $(document).ready(function () {
-    $.ajaxSetup({
-        headers: {'X-CSRF-Token': $('meta[name=_token]').attr('content')}
-    });
+    (new appBuilder()).initLib();
     loginBuilder.build();
     courseBuilder.build();
 })

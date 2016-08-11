@@ -25,6 +25,7 @@
                 </div>
                 <div class="panel-body">
                     @include('suppervisor.course.grid')
+                    @include('suppervisor.course.assign_trainee')
                 </div>
             </div>
         </div>

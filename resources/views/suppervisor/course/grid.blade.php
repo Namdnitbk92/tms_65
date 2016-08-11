@@ -1,18 +1,29 @@
 <div class="responstable-toolbar">
-    <button class="ui circular blue icon button add-course" onclick="courseBuilder.utils().redirect(&quot;{{ route('admin.courses.create') }}&quot;)">
-        <i class="add icon"></i>
-    </button>
+    @can('check_CRUD_course', Auth::user())
+        <button class="ui circular blue icon button add-course" onclick="courseBuilder.utils().redirect(&quot;{{ route('admin.courses.create') }}&quot;)">
+            <i class="add icon"></i>
+        </button>
 
-    <button class="ui circular red icon button del-course-multi">
-        <i class="trash icon"></i>
-    </button>
-
+        <button class="ui circular red icon button del-course-multi">
+            <i class="trash icon"></i>
+        </button>
+    @endcan
+    @can('is_user', Auth::user())
+        <button class="ui circular blue icon button my-course"
+                onclick="courseBuilder.utils().redirect(&quot;{{route('admin.courses.index', ['view_course_of_user' => true])}}&quot;)">
+            <i class="list layout icon"></i>
+        </button>
+    @endcan
     <button class="ui circular yellow icon button btn-excel" onclick="courseBuilder.utils().redirect(&quot;{{ route('exportExcel') }}&quot;)">
         <i class="file excel outline icon"></i>
     </button>
 
     <button class="ui circular orange icon button btn-csv" onclick="courseBuilder.utils().redirect(&quot;{{ route('exportCSV') }}&quot;)">
         <i class="file text outline icon"></i>
+    </button>
+
+    <button class="ui circular blue icon button share-fb-btn">
+        <i class="facebook icon"></i>
     </button>
 
     <div class="f-right">
@@ -55,17 +66,25 @@
                 <td>{{ $course->description }}</td>
                 <td>{!! fill_status($course->status) !!}</td>
                 <td>
-                    <div class="field">
-                        <button class="ui circular facebook icon button" onclick="courseBuilder.utils().redirect(&quot;{{ route('admin.courses.edit', ['course' => $course->id]) }}&quot;)">
-                            <i class="fa fa-edit"></i>
-                        </button>
-                        <button class="ui circular twitter icon button" onclick="courseBuilder.utils().redirect(&quot;{{ route('admin.courses.show', ['course' => $course->id]) }}&quot;)">
-                            <i class="info icon"></i>
-                        </button>
-                        <button class="ui circular red icon button del-course" type="submit" onclick="courseBuilder.saveSelect('{{ $course->id }}')">
-                            <i class="trash icon"></i>
-                        </button>
-                    </div>
+                    <div class="two field">
+                        <div class="field">
+                            <button class="ui circular facebook icon button" onclick="courseBuilder.utils().redirect(&quot;{{ route('admin.courses.edit', ['course' => $course->id]) }}&quot;)">
+                                <i class="fa fa-edit"></i>
+                            </button>
+                            <button class="ui circular twitter icon button" onclick="courseBuilder.utils().redirect(&quot;{{ route('admin.courses.show', ['course' => $course->id]) }}&quot;)">
+                                <i class="info icon"></i>
+                            </button>
+                        </div>
+                        <div class="field">
+                            <button class="ui circular red icon button del-course" type="submit" onclick="courseBuilder.saveSelect('{{ $course->id }}')">
+                                <i class="trash icon"></i>
+                            </button>
+                            <button class="ui circular yellow icon button btn-assign"
+                                    onclick="courseBuilder.openAssign('{{ $course->name }}', '{{ $course->id }}')">
+                                <i class="add user icon"></i>
+                            </button>
+                        </div>
+                     </div>
                 </td>
             </tr>
             {{ Form::close() }}

@@ -41,11 +41,18 @@ class CourseController extends Controller
      */
     public function index(Request $request)
     {
-        $entry = $request->input('entry');
-        $entry = empty($entry) ? config('common.paginate_document_per_page') : $entry;
-        $courses = $this->courseRepository->paginate($entry);
+        $getCourseOfUser = $request->input('view_course_of_user');
+        if (isset($getCourseOfUser)) {
+            $courses = $this->courseRepository->getCourseOfUser();
+            $trainees = [];
+        } else {
+            $entry = $request->input('entry');
+            $entry = empty($entry) ? config('common.paginate_document_per_page') : $entry;
+            $courses = $this->courseRepository->paginate($entry);
+            $trainees = $this->courseRepository->getAllTrainees();
+        }
 
-        return view('suppervisor.course.index', ['courses' => $courses]);
+        return view('suppervisor.course.index', ['courses' => $courses, 'trainees' => $trainees]);
     }
 
     /**
@@ -56,6 +63,7 @@ class CourseController extends Controller
     public function create()
     {
         $subjects = $this->courseRepository->getAllSubject();
+
 
         return view('suppervisor.course.create', [
             'subjects' => $subjects,
@@ -102,8 +110,13 @@ class CourseController extends Controller
     {
         $course = $this->courseRepository->showById($id);
         $subjects = $course->subjects()->get();
+        $trainees = $this->courseRepository->getTraineesOfCourse(['course_id' => $id]);
 
-        return view('suppervisor.course.show', ['course' => $course, 'subjects' => $subjects]);
+        return view('suppervisor.course.show', [
+            'course' => $course,
+            'subjects' => $subjects,
+            'trainees' => $trainees,
+        ]);
     }
 
     /**
@@ -117,11 +130,15 @@ class CourseController extends Controller
         $course = $this->courseRepository->showById($id);
         $subjects = $this->courseRepository->getAllSubject();
         $subjectsOfCourse = $course->subjects()->get();
+        $trainees = $this->courseRepository->getTraineesOfCourse(['course_id' => $id]);
+        $allTrainees = $this->courseRepository->getAllTraineesWithoutCourse($trainees);
 
         return view('suppervisor.course.edit', [
             'course' => $course,
             'subjects' => $subjects,
             'subjectsOfCourse' => $subjectsOfCourse,
+            'trainees' => $trainees,
+            'allTrainees' => $allTrainees,
         ]);
     }
 
@@ -141,6 +158,7 @@ class CourseController extends Controller
             'status',
             'end_date',
             'image_url',
+            'userInCourses',
         ]);
         $subjects = $request->input('subjectData');
         $result = $this->courseRepository->update($data, $subjects, $id);
@@ -187,5 +205,22 @@ class CourseController extends Controller
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
+    }
+
+    public function assignTrainee(Request $request)
+    {
+        if ($request->ajax()) {
+            $data = $request->only(['ids', 'course_id']);
+            try {
+                $result = $this->courseRepository->assignTraineeToCourse($data);
+                if (!$result) {
+                    return response()->json(['error' => 'Assign Trainee Error!']);
+                }
+            } catch (Exception $e) {
+                return response()->json(['error' => 'Assign Trainee Error!']);
+            }
+        }
+
+        return response()->json(['message' => 'Assign Trainee Successfully!']);
     }
 }

@@ -64,3 +64,10 @@ if (!function_exists('fill_status')) {
         }
     }
 }
+
+if(!function_exists('is_admin')) {
+    function is_admin($user)
+    {
+        return $user->role === 1;
+    }
+}

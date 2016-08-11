@@ -2,7 +2,7 @@
     <div class="sidebar-nav navbar-collapse">
         <ul class="nav in" id="side-menu">
             <li>
-                <a href="#" class="active"><i class="fa fa-dashboard fa-fw"></i>
+                <a href="{{ route('dashboard') }}" class="active"><i class="fa fa-dashboard fa-fw"></i>
                     {{ trans('label.dashboard') }}
                 </a>
             </li>

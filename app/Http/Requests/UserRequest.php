@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
 
-class UpdateUserRequest extends Request
+class UserRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,13 +23,11 @@ class UpdateUserRequest extends Request
      */
     public function rules()
     {
-        $parts = explode("/", UpdateUserRequest::path());
-        $userId = end($parts);
         return [
-            'name' => "max:255",
-            'email' => "required|email|max:255|unique:users,email,{$userId},id",
-            'password' => "required|min:6",
-            'image' => "mimes:jpg,jpeg,png,gif|max:2000",
+            'name' => 'required|max:255',
+            'address' => 'required|max:255',
+            'phone' => 'required|max:255',
+            'email' => 'required|email|max:255',
         ];
     }
 }

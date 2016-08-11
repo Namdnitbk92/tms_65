@@ -20,6 +20,10 @@ Route::auth();
 Route::get('/home', 'HomeController@index');
 
 Route::group(['middleware' => 'web'], function () {
+    Route::get('/' , ['as' =>'home', 'uses' => 'HomeController@index']);
+    Route::resource('admin', 'AdminController');
+    Route::resource('users', 'UserController');
+    Route::get('register/verify/{confirmation_code}', ['as' => 'user.active', 'uses' => 'Auth\AuthController@confirm']);
     Route::group(['prefix' => 'admin'], function () {
         Route::resource('trainees', 'TraineeController');
 
@@ -43,6 +47,26 @@ Route::group(['middleware' => 'web'], function () {
         Route::get('course/exportCSV', [
             'as' => 'exportCSV',
             'uses' => 'CourseController@exportCSV'
+        ]);
+
+        Route::post('assignTrainee', [
+            'as' => 'assignTrainee',
+            'uses' => 'CourseController@assignTrainee'
+        ]);
+
+        Route::get('admin/contact', [
+            'as' => 'contact',
+            'uses' => 'HomeController@contact',
+        ]);
+
+        Route::get('/dashboard', [
+            'as' => 'dashboard',
+            'uses' => 'HomeController@index'
+        ]);
+
+        Route::post('/getActivities', [
+            'as' => 'getActivities',
+            'uses' => 'HomeController@getActivities'
         ]);
 
         Route::group(['namespace' => 'Admin'], function () {

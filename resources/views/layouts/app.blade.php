@@ -38,18 +38,24 @@
                 @else
                     <div class="ui simple dropdown item dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                            <img class="avatar" src="{{ Auth::user()->avatar }}"/>
-                            &nbsp;&nbsp;{{ Auth::user()->name }}
-                            <span class="caret"></span>
+                            {!! Html::image(Auth::user()->avatar, null , ['class' => 'avatar']) !!}
+                            {{ Auth::user()->name }}<span class="caret"></span>
                         </a>
                         <div class="menu">
                             <a class="item" href="{{ url('/logout') }}">
                                 <i class="fa fa-btn fa-sign-out fa-fw"></i>
                                 {{ trans('label.logout') }}
                             </a>
-                            <a class="item" href="{{ url('/profile') }}">
-                                <i class="fa fa-btn fa-user fa-fw"></i>
-                                {{ trans('label.profile') }}
+                            <div class="item">
+                                @if(Auth::user()->isAdmin())
+                                    {{ link_to_route('admin.profile', trans('user.profile'),  Auth::user()->id, ['class' => 'fa fa-btn fa-user fa-fw']) }}
+                                @else
+                                    {{ link_to_route('users.edit', trans('user.profile'),  Auth::user()->id, ['class' => 'fa fa-btn fa-user fa-fw']) }}
+                                @endif
+                            </div>
+                            <a class="item" href="{{ route('contact') }}">
+                                <i class="fa fa-btn fa-bolt fa-fw"></i>
+                                {{ trans('label.contact') }}
                             </a>
                             <a class="item" href="{{ url('/profile') }}">
                                 <i class="fa fa-btn fa-bolt fa-fw"></i>
@@ -78,7 +84,5 @@
     @yield('content')
 @endif
 
-<script type="text/javascript" src="{{ asset('js/plugins.js') }}"></script>
-<script type="text/javascript" src="{{ asset('js/all.js') }}"></script>
 </body>
 </html>

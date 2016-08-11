@@ -5,7 +5,7 @@
         <section>
             <div class="row page-title-row">
                 <div class="col-md-6">
-                    <h3><small>&raquo; {{ trans('trainee.trainee_detailt') }} </small></h3>
+                    <h3> {{ trans('trainee.trainee_detailt') }} </h3>
                     <a href="{{ route('admin.trainees.index') }}" class="btn btn-success"><i class="fa fa-chevron-circle-left"></i>{{ trans('trainee.back') }}</a>
                 </div>
             </div>
