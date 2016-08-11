@@ -57,6 +57,10 @@
                                 <i class="fa fa-btn fa-bolt fa-fw"></i>
                                 {{ trans('label.contact') }}
                             </a>
+                            <a class="item" href="{{ route('contact') }}">
+                                <i class="fa fa-btn fa-bolt fa-fw"></i>
+                                {{ trans('label.contact') }}
+                            </a>
                             <a class="item" href="{{ url('/profile') }}">
                                 <i class="fa fa-btn fa-bolt fa-fw"></i>
                                 {{ trans('label.language') }}

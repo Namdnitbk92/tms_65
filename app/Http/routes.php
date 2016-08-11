@@ -23,7 +23,11 @@ Route::group(['middleware' => 'web'], function () {
     Route::get('/' , ['as' =>'home', 'uses' => 'HomeController@index']);
     Route::resource('admin', 'AdminController');
     Route::resource('users', 'UserController');
-    Route::get('register/verify/{confirmation_code}', ['as' => 'user.active', 'uses' => 'Auth\AuthController@confirm']);
+    Route::get('register/verify/{confirmation_code}', [
+        'as' => 'user.active',
+        'uses' => 'Auth\AuthController@confirm'
+    ]);
+
     Route::group(['prefix' => 'admin'], function () {
         Route::resource('trainees', 'TraineeController');
 
