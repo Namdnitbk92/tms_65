@@ -20,6 +20,12 @@ trait Utils
             throw new Exception($e->getMessage());
         }
 
+        Activity::create([
+            'user_id' => $userId,
+            'target_id' => $targetId,
+            'target_class' => $targetClass,
+            'action_type' => $action,
+        ]);
     }
 
     public function getActivity()

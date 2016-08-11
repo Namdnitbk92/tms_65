@@ -15,4 +15,7 @@ return[
     'user_update_success' => 'User Update Success',
     'user' => 'User',
     'profile' => 'Profile',
+    'english' => 'English',
+    'vietnamese' => 'Vietnamese',
+    'language' => 'Language',
 ];

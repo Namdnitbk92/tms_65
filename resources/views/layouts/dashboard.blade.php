@@ -49,5 +49,33 @@
         var interval = setInterval(function(){
             if (document.readyState === "complete") {clearInterval(interval);activities.build();}
         },200);
+
+    <script>
+        $(function () {
+            var element = $('activities');
+            var html_text = '';
+            $.ajax({
+                url: 'getActivities',
+                type: 'POST',
+            }).done(function (res) {
+                if (res.data) {
+                    var data = res['data'];
+                    for (var k in data) {
+                        var line = JSON.parse(data[k]);
+                        html_text = '<div class="ui feed"><div class="event"><div class="label">';
+                        html_text = '<div class="ui feed"><div class="event"><div class="label">';
+                        html_text += '<img src="' + line['active_user_avatar'] + '"></div>';
+                        html_text += '<div class="content"><div class="summary"><a class="user">';
+                        html_text += line['active_user_name'] + '&nbsp;&nbsp;</a><b class="ui label red btn-action-k"> ' + line['action'] + ' </b>&nbsp;' + line['className'];
+                        html_text += '&nbsp;<a class="ui label blue" onclick="courseBuilder.utils().redirect(&quot;' + line['link-to-object-detail'] +'&quot;)"> ' + line['objectName'] + ' [' + line['target_id'] + '] </a>';
+                        html_text += ' <div class="date">' + line['time'] + '</div></div></div></div></div> ';
+                        element.append(html_text);
+                        html_text = '';
+                    }
+                    $('.loading-ajax').hide();
+                    element.show(5000);
+                }
+            })
+        });
     </script>
 @endsection

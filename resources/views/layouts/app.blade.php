@@ -47,25 +47,35 @@
                                 <i class="fa fa-btn fa-sign-out fa-fw"></i>
                                 {{ trans('label.logout') }}
                             </a>
-                            <div class="item">
-                              @if(Auth::user()->isAdmin())
-                                    {{ link_to_route('admin.profile', trans('user.profile'),  Auth::user()->id, ['class' => 'fa fa-btn fa-user fa-fw']) }}
-                                @else
-                                    {{ link_to_route('users.edit', trans('user.profile'),  Auth::user()->id, ['class' => 'fa fa-btn fa-user fa-fw']) }}
-                                @endif
+                           @if(Auth::user()->isAdmin())
+                               <a class="item" href="{{ route('admin.profile', [Auth::user()->id]) }}">
+                                    <i class="fa fa-btn fa-sign-out fa-fw"></i>
+                                    {{ trans('user.profile') }}
+                               </a>
+                           @else
+                               <a class="item" href="{{ route('users.edit', [Auth::user()->id]) }}">
+                                   <i class="fa fa-btn fa-sign-out fa-fw"></i>
+                                   {{ trans('user.profile') }}
+                               </a>
+                           @endif
+                            <a class="item" href="{{ route('contact') }}">
+                                <i class="fa fa-btn fa-bolt fa-fw"></i>
+                                {{ trans('label.contact') }}
+                            </a>
+                            <div class="ui right pointing dropdown link item">
+                                <i class="dropdown icon"></i>
+                                {{ trans('user.language') }}
+                                <div class="menu">
+                                    <div class="item"><a href=" {{ route('lang', 'en') }} ">
+                                        <i class="us flag"></i>
+                                        {{ trans('user.english') }}</a>
+                                    </div>
+                                    <div class="item"><a href="{{ route('lang', 'vi') }}">
+                                        <i class="vietnam flag"></i>
+                                        {{ trans('user.vietnamese') }}</a>
+                                    </div>
+                                </div>
                             </div>
-                            <a class="item" href="{{ route('contact') }}">
-                                <i class="fa fa-btn fa-bolt fa-fw"></i>
-                                {{ trans('label.contact') }}
-                            </a>
-                            <a class="item" href="{{ route('contact') }}">
-                                <i class="fa fa-btn fa-bolt fa-fw"></i>
-                                {{ trans('label.contact') }}
-                            </a>
-                            <a class="item" href="{{ url('/profile') }}">
-                                <i class="fa fa-btn fa-bolt fa-fw"></i>
-                                {{ trans('label.language') }}
-                            </a>
                         </div>
                     </div>
                 @endif

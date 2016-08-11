@@ -15,4 +15,7 @@ return[
     'user_update_success' => 'Cập nhật người dùng thành công',
     'user' => 'Người dùng',
     'profile' => 'Thông tin cá nhân',
+    'english' => 'Tiếng Anh',
+    'vietnamese' => 'Tiếng Việt',
+    'language' => 'Ngôn ngữ',
 ];

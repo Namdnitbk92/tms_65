@@ -21,8 +21,11 @@ var appBuilder = function () {
             headers: {'X-CSRF-Token': $('meta[name=_token]').attr('content')}
         });
 
+<<<<<<< 1dd36dcd5ea52f6b51cd135c389cf9ea26ea9715
 
 
+=======
+>>>>>>> demo
     }
 
     this.tooltip = function (configs) {

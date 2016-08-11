@@ -31,5 +31,13 @@ return [
         'finish' => 4,
         'start' => 5,
     ],
+    'action_type' => [
+        'create' => 0,
+        'update' => 1,
+        'delete' => 2,
+        'join' => 3,
+        'finish' => 4,
+        'start' => 5,
+    ],
     'paginate_document_per_page' => 5,
 ];

@@ -20,7 +20,6 @@ return [
     'forgot_password' => 'Bạn quên mật khẩu?',
     'course' => 'Khóa Học',
     'subject' => 'Môn Học',
-    'task' => 'Bài tập',
     'chart' => 'Biểu Đồ',
     'dashboard' => 'Bảng Điều Khiển',
     'welcome' => 'Chào Mừng Đến Với Trang Hệ Thống TMS',
@@ -37,9 +36,9 @@ return [
     'created' => 'Đã tạo',
     'in_progress' => 'Trong quá trình',
     'pending' => 'Chưa xong',
-    'cancel' => 'Thoát',
     'back' => 'Trở lại',
     'ok' => 'Chấp nhận',
     'confirm' => 'Có phải bạn?',
     'image' => 'Ảnh',
+    'contact' => 'Liên Hệ',
 ];

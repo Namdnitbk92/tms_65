@@ -5,6 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Repositories\Course\CourseRepository;
+use App\Http\Controllers\Controller;
+use App\Models\User;
+use App\Http\Requests\UserRequest;
+use Cloudder;
+use App\Repositories\BaseRepositoryInterface;
 
 class UserController extends Controller
 {
@@ -49,17 +54,6 @@ class UserController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
      * Display the specified resource.
      *
      * @param  int $id
@@ -85,6 +79,7 @@ class UserController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
+
     public function edit($id)
     {
         $user = $this->userRepository->showById($id);
@@ -96,11 +91,22 @@ class UserController extends Controller
     {
         try {
             $user = $this->userRepository->showById($id);
+            if ($request->hasFile('avatar')) {
+                $filename = $request->avatar;
+                Cloudder::upload($filename, config('common.path_cloud_avatar') . "$user->name");
+                $user->avatar = Cloudder::getResult()['url'];
+            }
+            $user->name = $request->get('name', '');
+            $user->address = $request->get('address', '');
+            $user->phone = $request->get('phone', '');
+            $user->email = $request->get('email', '');
+
+            $user->save();
         } catch (Exception $ex) {
             return redirect()->route('users.edit')->withError($ex->getMessage());
         }
 
-
+        return redirect('home');
     }
 
     public function finishSubject(Request $request)
@@ -121,5 +127,4 @@ class UserController extends Controller
 
         return response()->json(['messsage' => $msg]);
     }
-
 }

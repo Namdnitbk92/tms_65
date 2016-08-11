@@ -84,6 +84,7 @@ class CourseRepository extends BaseRepository
             $course = $this->showById($id);
             $course->update($data);
             if (!empty($subjects)) {
+                $subjects = explode(',', $subjects);
                 $course->subjects()->sync($subjects);
             }
             $users = $data['userInCourses'];
@@ -304,5 +305,4 @@ class CourseRepository extends BaseRepository
 
         return $subjects;
     }
-
 }

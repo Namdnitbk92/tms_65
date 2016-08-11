@@ -42,4 +42,5 @@ return [
     'ok' => 'Ok',
     'confirm' => 'Are you sure?',
     'image' => 'Images',
+    'contact' => 'Contact',
 ];

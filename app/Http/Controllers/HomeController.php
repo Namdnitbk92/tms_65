@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests;
 use Illuminate\Http\Request;
 use App\Services\Utils;
+use Session;
+use Responese;
 
 class HomeController extends Controller
 {
@@ -42,5 +44,11 @@ class HomeController extends Controller
         }
 
         return response()->json(['data' => $this->getActivity()]);
+    }
+
+    public function chooseLanguage($lang)
+    {
+        Session::put('lang', $lang);
+        return redirect()->back();
     }
 }
