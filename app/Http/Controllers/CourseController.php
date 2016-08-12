@@ -64,7 +64,6 @@ class CourseController extends Controller
     {
         $subjects = $this->courseRepository->getAllSubject();
 
-
         return view('suppervisor.course.create', [
             'subjects' => $subjects,
             'course' => [],

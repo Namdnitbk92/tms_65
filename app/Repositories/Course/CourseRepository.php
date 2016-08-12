@@ -285,21 +285,26 @@ class CourseRepository extends BaseRepository
             return;
         }
         $user_subjects = $user->user_subjects()->get();
+
         $subjects = $user_subjects->map(function ($user_subject) {
             $subject = $user_subject->subject()->first();
-            $temp = app()->make('stdClass');
-            $temp->id = $user_subject->id;
-            $temp->user_course_id = $user_subject->user_course_id;
-            $temp->course_id = UserCourse::find($user_subject->user_course_id)->course_id;
-            $temp->subject_id = $user_subject->subject_id;
-            $temp->start_date = $user_subject->start_date;
-            $temp->end_date = $user_subject->end_date;
-            $temp->status = $user_subject->status;
-            $temp->progress = $user_subject->progress;
-            $temp->subject_name = $subject->name;
-            $temp->description = $subject->description;
+            if (isExists($subject)) {
+                $temp = app()->make('stdClass');
+                $temp->id = $user_subject->id;
+                $temp->user_course_id = $user_subject->user_course_id;
+                $temp->course_id = UserCourse::find($user_subject->user_course_id)->course_id;
+                $temp->subject_id = $user_subject->subject_id;
+                $temp->start_date = $user_subject->start_date;
+                $temp->end_date = $user_subject->end_date;
+                $temp->status = $user_subject->status;
+                $temp->progress = $user_subject->progress;
+                $temp->subject_name = $subject->name;
+                $temp->description = $subject->description;
 
-            return $temp;
+                return $temp;
+            } 
+
+            return collect([]);
         });
 
         return $subjects;

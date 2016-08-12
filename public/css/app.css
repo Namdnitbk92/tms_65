@@ -5986,6 +5986,11 @@ button.close {
     height: 200px;
     border-radius: 50%;
 }
+
+.subject-list {
+    padding: 6px;
+    margin-left: 7px;
+}
 /*# sourceMappingURL=app.css.map */
 
 /*Subject_Task*/

@@ -17,7 +17,34 @@
             <div class="ui two column stackable grid">
                 <div class="column">
                     <div class="ui segment">
-                        <div id="course"></div>
+                        <h4 class="ui horizontal divider header blue">
+                          <i class="tag icon"></i>
+                          Progress (Course Laravel)
+                        </h4>
+                        <div class="field">
+                            <label>Courses</label>
+                             <div class="progress">
+                                <div name="progress" class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:50%">
+                                   50%
+                                </div>
+                            </div>
+                        </div>
+                         <div class="field">
+                            <label>Subject</label>
+                             <div class="progress">
+                                <div name="progress" class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:50%">
+                                   50%
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label>Task</label>
+                             <div class="progress">
+                                <div name="progress" class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:50%">
+                                   50%
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="column">

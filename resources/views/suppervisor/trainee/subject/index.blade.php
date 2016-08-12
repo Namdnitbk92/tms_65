@@ -48,6 +48,8 @@
                         </div>
                     </div>
                     <table class="responstable">
+                    @if(isExists($subjects))
+                        <?php dd($subjects)?>
                         <tbody>
                         <tr>
                             <th>Id</th>
@@ -95,18 +97,26 @@
                             </tr>
                         @endif
                         </tbody>
+                        @else
+                            <tr class="center">Data Empty</tr>
+                        @endif
                     </table>
-                    @if(!app('request')->input('view_subject_of_user'))
-                    {{ Form::open(['method' => 'GET', 'route' => ['user.subject.index', 'user' => auth()->user()->id], 'name' => 'show-entry']) }}
-                        <input type="hidden" name="entry"/>
-                    {{ Form::close() }}
-                    {!! show_entry($subjects) !!}
-                    @endif
+                    @if(isExists($subjects))
+                        @if(!app('request')->input('view_subject_of_user'))
+                        {{ Form::open(['method' => 'GET', 'route' => ['user.subject.index', 'user' => auth()->user()->id], 'name' => 'show-entry']) }}
+                            <input type="hidden" name="entry"/>
+                        {{ Form::close() }}
+                        {!! show_entry($subjects) !!}
+                        @endif
+                    @endif   
                 </div>
             </div>
         </div>
     </div>
-    @include('common.confirm')
+    @include('common.confirm', [
+        'title' => 'Notifcation',
+        'content' => 'Are you sure ?'
+    ])
     <script>
         $('.btn-finish').popup({
             position : 'top left',

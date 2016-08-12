@@ -39,33 +39,43 @@
                 @else
                     <div class="ui simple dropdown item dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                            {!! Html::image(Auth::user()->avatar, null , ['class' => 'avatar']) !!}
+                            {!! Html::image(Auth::user()->avatar ? Auth::user()->avatar : asset('images\trainee.png'), null , ['class' => 'avatar']) !!}
                             {{ Auth::user()->name }}<span class="caret"></span>
                         </a>
                         <div class="menu">
                            <a class="item" href="{{ url('/logout') }}">
-                                <i class="fa fa-btn fa-sign-out fa-fw"></i>
-                                {{ trans('label.logout') }}
-                            </a>
-                            <div class="item">
-                              @if(Auth::user()->isAdmin())
-                                    {{ link_to_route('admin.profile', trans('user.profile'),  Auth::user()->id, ['class' => 'fa fa-btn fa-user fa-fw']) }}
-                                @else
-                                    {{ link_to_route('users.edit', trans('user.profile'),  Auth::user()->id, ['class' => 'fa fa-btn fa-user fa-fw']) }}
-                                @endif
-                            </div>
-                            <a class="item" href="{{ route('contact') }}">
-                                <i class="fa fa-btn fa-bolt fa-fw"></i>
-                                {{ trans('label.contact') }}
-                            </a>
-                            <a class="item" href="{{ route('contact') }}">
-                                <i class="fa fa-btn fa-bolt fa-fw"></i>
-                                {{ trans('label.contact') }}
-                            </a>
-                            <a class="item" href="{{ url('/profile') }}">
-                                <i class="fa fa-btn fa-bolt fa-fw"></i>
-                                {{ trans('label.language') }}
-                            </a>
+                               <i class="fa fa-btn fa-sign-out fa-fw"></i>
+                               {{ trans('label.logout') }}
+                           </a>
+                           @if(Auth::user()->isAdmin())
+                               <a class="item" href="{{ route('admin.profile', [Auth::user()->id]) }}">
+                                   <i class="fa fa-btn fa-sign-out fa-fw"></i>
+                                   {{ trans('user.profile') }}
+                               </a>
+                           @else
+                               <a class="item" href="{{ route('users.edit', [Auth::user()->id]) }}">
+                                   <i class="fa fa-btn fa-sign-out fa-fw"></i>
+                                   {{ trans('user.profile') }}
+                               </a>
+                           @endif
+                           <a class="item" href="{{ route('contact') }}">
+                               <i class="fa fa-btn fa-bolt fa-fw"></i>
+                               {{ trans('label.contact') }}
+                           </a>
+                           <div class="ui right pointing dropdown link item">
+                               <i class="dropdown icon"></i>
+                               {{ trans('user.language') }}
+                               <div class="menu">
+                                   <div class="item"><a href=" {{ route('lang', 'en') }} ">
+                                       <i class="us flag"></i>
+                                       {{ trans('user.english') }}</a>
+                                   </div>
+                                   <div class="item"><a href="{{ route('lang', 'vi') }}">
+                                       <i class="vietnam flag"></i>
+                                       {{ trans('user.vietnamese') }}</a>
+                                   </div>
+                               </div>
+                           </div>
                         </div>
                     </div>
                 @endif
@@ -93,5 +103,7 @@
 <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
 <script src="http://formvalidation.io/vendor/formvalidation/js/formValidation.min.js"></script>
 <script src="http://formvalidation.io/vendor/formvalidation/js/framework/bootstrap.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/4.2.6/highcharts.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/4.2.6/highcharts-3d.js"></script>
 </body>
 </html>

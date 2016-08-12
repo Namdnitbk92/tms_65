@@ -111,7 +111,8 @@ class AuthController extends Controller
         $user->confirmed = 1;
         $user->confirmation_code = '';
         $user->save();
-        return redirect()->route('home');
+        auth()->login($user);
+        return redirect()->route('dashboard');
     }
 
 

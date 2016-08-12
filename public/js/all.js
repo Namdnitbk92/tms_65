@@ -390,6 +390,11 @@ var courseBuilder = (function () {
                 }
             });
 
+            $('#assignModal').on('hidden.bs.modal', function () {
+                joins = [];
+                $('.total-trainee').text(joins.length + ' trainee');
+            });
+
             (function () {
                 var input = $('input[type="checkbox"]');
                 for (var i = 0; i < input.length; i++) {
@@ -436,6 +441,56 @@ var courseBuilder = (function () {
             $('course').text(courseName);
             $('#assignModal').attr('course-current', courseId);
         },
+        addCourse : function (userId) {
+                if (!_.contains(joins, userId)) {
+                    $('.btn-trainee').transition('jiggle');
+                    joins.push(userId);
+                }
+                $('.total-trainee').text(joins.length + ' trainee');
+        },
+        removeCourse : function (userId) {
+                var index = _.indexOf(joins, userId);
+                if (index != -1) {
+                    $('.btn-trainee').transition('jiggle');
+                    joins.splice(_.indexOf(joins, userId), 1);
+                }
+                $('.total-trainee').text(joins.length + ' trainee');
+        },   
+        removeTrainee : function (userId) {
+            var index = _.indexOf(total_trainee, userId);
+            if (index != -1) {
+                $('.btn-trainee').transition('jiggle');
+                total_trainee.splice(_.indexOf(total_trainee, userId), 1);
+            }
+            $('.total-trainee').text(total_trainee.length + ' trainee in course');
+        },
+        addTrainee : function (userId) {
+            if (!_.contains(total_trainee, userId)) {
+                $('.btn-trainee').transition('jiggle');
+                total_trainee.push(userId);
+            }
+            $('.total-trainee').text(total_trainee.length + ' trainee in course');
+        },
+        assignTraiee : function () {
+                $.ajax({
+                    url: 'assignTrainee',
+                    data: {ids: joins, course_id: $('#assignModal').attr('course-current')},
+                    type: 'POST',
+                    beforeSend: function () {
+                        $('.loading-ajax').show();
+                    }
+                }).done(function (res) {
+                    setTimeout(function () {
+                        $('.loading-ajax').hide();
+                        $('.result-assign').show(300);
+                        $('result-assign').text(res.message ? res.message : res);
+                    }, 1000)
+
+                    setTimeout(function () {
+                        $('.result-assign').hide();
+                    }, 2500);
+                })
+        },
         utils: function () {
             return course.utils;
         },
@@ -454,13 +509,17 @@ var activities = (function(){
             var element = $('activities');
             var html_text = '';
             $.ajax({
-                url: 'admin/getActivities',
+                url: 'getActivities',
                 type: 'POST',
             }).done(function (res) {
                 if (res.data) {
                     var data = res['data'];
                     for (var k in data) {
                         var line = JSON.parse(data[k]);
+                        if(!line['active_user_avatar']) 
+                            line['active_user_avatar'] = 'images/trainee.png';
+
+                        console.log(line['active_user_avatar'])
                         html_text = '<div class="ui feed"><div class="event"><div class="label">';
                         html_text = '<div class="ui feed"><div class="event"><div class="label">';
                         html_text += '<img src="' + line['active_user_avatar'] + '"></div>';
@@ -475,6 +534,71 @@ var activities = (function(){
                     element.show(5000);
                 }
             })
+
+            //init chart
+             $('#subject').highcharts({
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'Course Information'
+                },
+                xAxis: {
+                    type: 'category'
+                },
+                yAxis: {
+                    title: {
+                        text: 'Course Information'
+                    }
+                },
+                legend: {
+                    enabled: false
+                },
+                plotOptions: {
+                    series: {
+                        borderWidth: 0,
+                        dataLabels: {
+                            enabled: true,
+                            format: '{point.y:.1f}%'
+                        }
+                    }
+                },
+
+                tooltip: {
+                    headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                    pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
+                },
+
+                series: [{
+                    name: 'Brands',
+                    colorByPoint: true,
+                    data: [{
+                        name: 'Microsoft Internet Explorer',
+                        y: 56.33,
+                        drilldown: 'Microsoft Internet Explorer'
+                    }, {
+                        name: 'Chrome',
+                        y: 24.03,
+                        drilldown: 'Chrome'
+                    }, {
+                        name: 'Firefox',
+                        y: 10.38,
+                        drilldown: 'Firefox'
+                    }, {
+                        name: 'Safari',
+                        y: 4.77,
+                        drilldown: 'Safari'
+                    }, {
+                        name: 'Opera',
+                        y: 0.91,
+                        drilldown: 'Opera'
+                    }, {
+                        name: 'Proprietary or Undetectable',
+                        y: 0.2,
+                        drilldown: null
+                    }]
+                }],
+            });
         }
     }
 }());
