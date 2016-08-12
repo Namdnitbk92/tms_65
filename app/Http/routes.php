@@ -48,7 +48,7 @@ Route::group(['middleware' => 'web'], function () {
         ]);
 
         Route::group(['prefix' => 'admin'], function () {
-            
+
             Route::resource('trainees', 'TraineeController');
 
             Route::resource('courses', 'CourseController');
@@ -113,6 +113,11 @@ Route::group(['middleware' => 'web'], function () {
 
     Route::group(['middleware' => 'isUser'], function () {
         Route::resource('users', 'UserController');
+        Route::resource('user.subject', 'UserController', ['only' => ['index', 'show']]);
+        Route::post('user/finishSubject', [
+            'as' => 'finishSubject',
+            'uses' => 'UserController@finishSubject'
+        ]);
 
         Route::group(['namespace' => 'User'], function () {
             Route::resource('users.tasks', 'TaskController');

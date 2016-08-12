@@ -9,12 +9,17 @@ trait Utils
 
     public function logToActivity($userId, $targetId, $targetClass, $action)
     {
-        Activity::create([
-            'user_id' => $userId,
-            'target_id' => $targetId,
-            'target_class' => $targetClass,
-            'action_type' => $action,
-        ]);
+        try {
+            Activity::create([
+                'user_id' => $userId,
+                'target_id' => $targetId,
+                'target_class' => $targetClass,
+                'action_type' => $action,
+            ]);
+        } catch(Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+
     }
 
     public function getActivity()

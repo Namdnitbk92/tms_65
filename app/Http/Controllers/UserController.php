@@ -4,19 +4,17 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
-use App\Models\User;
-use App\Http\Requests\UserRequest;
-use Cloudder;
-use App\Repositories\BaseRepositoryInterface;
+use App\Repositories\Course\CourseRepository;
 
 class UserController extends Controller
 {
     private $userRepository;
+    private $courseRepository;
 
-    public function __construct(BaseRepositoryInterface $userRepository)
+    public function __construct(BaseRepositoryInterface $userRepository, CourseRepository $courseRepository)
     {
         $this->userRepository = $userRepository;
+        $this->courseRepository = $courseRepository;
     }
 
     /**
@@ -24,16 +22,69 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return redirect()->route('home');
+        $view_subject_of_user = $request->input('view_subject_of_user');
+        if (isset($view_subject_of_user)) {
+            $subjects = $this->courseRepository->getSubjectsOfUser();
+        } else {
+            $entry = $request->input('entry');
+            $entry = empty($entry) ? config('common.paginate_document_per_page') : $entry;
+            $subjects = $this->courseRepository->getSubjects($entry);
+        }
+
+        return view('suppervisor.trainee.subject.index', [
+            'subjects' => $subjects,
+        ]);
     }
 
-    public function show()
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
     {
         //
     }
 
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        //
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        $data = $this->courseRepository->getSubjectsOfUser();
+        $subjects = collect([]);
+        foreach ($data as $element) {
+            if ($element->subject_id === intval($id)) {
+                $subjects->push($element);
+                break;
+            }
+        }
+
+        return view('layouts.user.subject.show', ['subject' => $subjects->first()]);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
     public function edit($id)
     {
         $user = $this->userRepository->showById($id);
@@ -49,23 +100,26 @@ class UserController extends Controller
             return redirect()->route('users.edit')->withError($ex->getMessage());
         }
 
-        if ($request->hasFile('avatar')) {
-            $filename = $request->avatar;
-            try {
-                Cloudder::upload($filename, config('common.path_cloud_avatar')."$user->name");
-                $user->avatar = Cloudder::getResult()['url'];
-            } catch (Exception $ex) {
-                return redirect()->route('users.edit')->withError(trans('message.upload_error'));
+
+    }
+
+    public function finishSubject(Request $request)
+    {
+        $msg = '';
+        if (!$request->has('id')) {
+            $msg = 'Can"t finish subject without id';
+        } else {
+            $id = $request->input('id');
+            $msg = 'Finish Subject Id : ' . $id . 'successfully';
+            if ($request->ajax()) {
+                $result = $this->courseRepository->finishSubject($id);
+                if (!$result) {
+                    $msg = 'Finish subject id' . $id . 'errors';
+                }
             }
         }
 
-        $user->name = $request->get('name', '');
-        $user->address = $request->get('address', '');
-        $user->phone = $request->get('phone', '');
-        $user->email = $request->get('email', '');
-
-        $user->save();
-
-        return redirect('home');
+        return response()->json(['messsage' => $msg]);
     }
+
 }
