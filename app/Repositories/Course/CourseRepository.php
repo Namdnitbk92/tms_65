@@ -2,11 +2,13 @@
 
 namespace App\Repositories\Course;
 
+use App\Models\UserSubject;
 use DB;
 use App\Services\Utils;
 use App\Models\Course;
 use App\Models\User;
 use App\Models\Subject;
+use App\Models\UserCourse;
 use App\Http\Requests\Request;
 use App\Repositories\BaseRepository;
 
@@ -49,6 +51,7 @@ class CourseRepository extends BaseRepository
             $course = $this->create($data);
             if ($data['subjectData']) {
                 $subjects = $data['subjectData'];
+                $subjects = explode(',', $subjects);
                 $course->subjects()->attach($subjects);
             }
         } catch (Exception $e) {
@@ -75,12 +78,12 @@ class CourseRepository extends BaseRepository
     {
         $check = false;
         $course = collect([]);
+        $users = [];
         try {
             DB::beginTransaction();
             $course = $this->showById($id);
             $course->update($data);
             if (!empty($subjects)) {
-                $subjects = explode(',', $subjects);
                 $course->subjects()->sync($subjects);
             }
             $users = $data['userInCourses'];
@@ -89,6 +92,13 @@ class CourseRepository extends BaseRepository
                 $course->users()->sync($users);
             } else {
                 $course->user_course()->delete();
+            }
+
+            $user_courses = $course->user_course()->get();
+            if(intval($data['status']) === 2 && !empty($user_courses) && !empty($subjects)) {
+                foreach ($user_courses as $user) {
+                    $user->subjects()->sync($subjects);
+                }
             }
         } catch (Exception $e) {
             $check = true;
@@ -225,6 +235,74 @@ class CourseRepository extends BaseRepository
         $user = auth()->user();
         $courses = $user->courses()->get();
         return $courses;
+    }
+
+    public function finishSubject($id)
+    {
+        try {
+            $user_subject = UserSubject::findOrFail($id);
+            $val = explode('/',$user_subject->progress);
+            if(sizeof($val) == 2) {
+                $percent = $val[0] / $val[1];
+            } else {
+                $percent = 0;
+            }
+            if($percent < 1) {
+                return false;
+            }
+            $user_subject->status = 4;//set status to finish
+            $user_subject->save();
+
+            $this->logToActivity(
+                auth()->user()->id,
+                $user_subject->id,
+                UserSubject::class,
+                config('common.action_type.finish')
+            );
+        } catch (Exception $e) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function getSubjects($limit = null)
+    {
+        $subjects = [];
+        if ($limit !== null) {
+            $subjects = $this->subject->paginate($limit);
+        } else {
+            $subjects = $this->subject->all();
+        }
+
+        return $subjects;
+    }
+
+    public function getSubjectsOfUser()
+    {
+        $user = auth()->user() ;
+        if ($user == null) {
+            return;
+        }
+        $user_subjects = $user->user_subjects()->get();
+        $subjects = $user_subjects->map(function ($user_subject) {
+            $subject = $user_subject->subject()->first();
+            $temp = app()->make('stdClass');
+            $temp->id = $user_subject->id;
+            $temp->user_course_id = $user_subject->user_course_id;
+            $temp->course_id = UserCourse::find($user_subject->user_course_id)->course_id;
+            $temp->subject_id = $user_subject->subject_id;
+            $temp->start_date = $user_subject->start_date;
+            $temp->end_date = $user_subject->end_date;
+            $temp->status = $user_subject->status;
+            $temp->progress = $user_subject->progress;
+            $temp->subject_name = $subject->name;
+            $temp->description = $subject->description;
+
+            return $temp;
+        });
+
+        return $subjects;
     }
 
 }

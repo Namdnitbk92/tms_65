@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.2/semantic.min.css">
     <link rel="stylesheet" href="http://formvalidation.io/vendor/formvalidation/css/formValidation.min.css">
-    @yield('css')
 </head>
 <body id="app-layout">
 <nav class="navbar navbar-default navbar-static-top">
@@ -44,12 +43,12 @@
                             {{ Auth::user()->name }}<span class="caret"></span>
                         </a>
                         <div class="menu">
-                            <a class="item" href="{{ url('/logout') }}">
+                           <a class="item" href="{{ url('/logout') }}">
                                 <i class="fa fa-btn fa-sign-out fa-fw"></i>
                                 {{ trans('label.logout') }}
                             </a>
                             <div class="item">
-                                @if(Auth::user()->isAdmin())
+                              @if(Auth::user()->isAdmin())
                                     {{ link_to_route('admin.profile', trans('user.profile'),  Auth::user()->id, ['class' => 'fa fa-btn fa-user fa-fw']) }}
                                 @else
                                     {{ link_to_route('users.edit', trans('user.profile'),  Auth::user()->id, ['class' => 'fa fa-btn fa-user fa-fw']) }}
@@ -74,7 +73,7 @@
         </div>
     </div>
     @if (!Auth::guest())
-        @include('layouts.navbar')
+       @include('layouts.navbar')
     @endif
 </nav>
 <div id="_loader" class="loadingArea" style="display: none;">
@@ -94,8 +93,5 @@
 <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
 <script src="http://formvalidation.io/vendor/formvalidation/js/formValidation.min.js"></script>
 <script src="http://formvalidation.io/vendor/formvalidation/js/framework/bootstrap.min.js"></script>
-
-@yield('js')
-
 </body>
 </html>

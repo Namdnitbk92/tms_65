@@ -20,10 +20,17 @@
                 </a>
             </li>
             <li>
+                @can('is_user', Auth::user())
+                <a href="{{ route('user.subject.index', ['user' => auth()->user()->id]) }}">
+                    <i class="fa fa-book fa-fw"></i>
+                    {{ trans('label.subject') }}
+                </a>
+                @else
                 {!! Html::decode(link_to_route(
                     'admin.subjects.index',
                     '<i class="fa fa-book fa-fw"></i> ' . trans('label.subject')
                 )) !!}
+                @endcan
             </li>
             @can('is_admin', Auth::user())
             <li>

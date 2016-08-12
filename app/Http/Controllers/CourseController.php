@@ -161,6 +161,7 @@ class CourseController extends Controller
             'userInCourses',
         ]);
         $subjects = $request->input('subjectData');
+        $subjects = explode(',', $subjects);
         $result = $this->courseRepository->update($data, $subjects, $id);
         if (!$result) {
             return redirect()->route('admin.courses.edit', ['courses' => $id])
