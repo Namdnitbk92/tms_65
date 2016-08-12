@@ -32,7 +32,7 @@ class AuthController extends Controller
      * @var string
      */
     protected $redirectTo = '/';
-    protected $redirectPath = '/home';
+//    protected $redirectPath = '/home';
 
     /**
      * Create a new authentication controller instance.
@@ -111,7 +111,7 @@ class AuthController extends Controller
         $user->confirmed = 1;
         $user->confirmation_code = '';
         $user->save();
-        return redirect()->route('/');
+        return redirect()->route('home');
     }
 
 
@@ -148,5 +148,14 @@ class AuthController extends Controller
         }
 
         return $this->sendFailedLoginResponse($request);
+    }
+
+    public function redirectPath()
+    {
+        if (is_admin(auth()->user())) {
+            return redirect();
+        }
+        return redirect()->route('home');
+
     }
 }

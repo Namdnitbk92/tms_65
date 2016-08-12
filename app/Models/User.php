@@ -69,4 +69,14 @@ class User extends Authenticatable
     {
         return $this->role;
     }
+    
+    public function userSubjects()
+    {
+        return $this->hasManyThrough(UserSubject::class, UserCourse::class);
+    }
+
+    public function userTasks()
+    {
+        return $this->hasManyThrough(UserTask::class, UserCourse::class);
+    }
 }

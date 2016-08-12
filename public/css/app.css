@@ -5987,3 +5987,34 @@ button.close {
     border-radius: 50%;
 }
 /*# sourceMappingURL=app.css.map */
+
+/*Subject_Task*/
+.fa-btn {
+  margin-right: 6px;
+}
+
+.form {
+  margin-top: 5%;
+}
+
+.data_list {
+  margin-top: 4%;
+}
+
+#tblData > thead > tr > th {
+  background-color: #1b6d85;
+  color: white;
+}
+
+#tblData > tbody > tr > td {
+  padding: 0;
+}
+
+.th_chk, .th_action, .td_action {
+  text-align: center;
+}
+
+.chk {
+  text-align: center;
+  width: 5%;
+}

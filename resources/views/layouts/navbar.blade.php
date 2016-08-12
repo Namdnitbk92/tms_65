@@ -25,12 +25,23 @@
                     '<i class="fa fa-book fa-fw"></i> ' . trans('label.subject')
                 )) !!}
             </li>
+            @can('is_admin', Auth::user())
             <li>
                 {!! Html::decode(link_to_route(
                     'admin.tasks.index',
                     '<i class="fa fa-tasks fa-fw"></i> ' . trans('label.task')
                 )) !!}
             </li>
+            @endcan
+            @can('is_user', Auth::user())
+            <li>
+                {!! Html::decode(link_to_route(
+                    'users.tasks.index',
+                    '<i class="fa fa-tasks fa-fw"></i> ' . trans('label.task'),
+                    [Auth::user()->id]
+                )) !!}
+            </li>
+            @endcan
         </ul>
     </div>
 </div>

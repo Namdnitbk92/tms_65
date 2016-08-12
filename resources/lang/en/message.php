@@ -16,7 +16,7 @@ return [
     'delete_multi_success' => 'Delete multi successfully!',
     'create_success' => 'Create successfully!',
     'update_success' => 'Update successfully!',
-    'delete_successfully' => 'Delete option successfully',
+    'finish_error' => 'Can not finish this task? This task was finished.',
     'course' => [
         'create' => [
             'success' => 'Create course successfully',

@@ -2,6 +2,10 @@
 
 @section('title', trans('common.title_page.edit_subject'))
 
+@section('css')
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+@stop
+
 @section('content')
     <div class="row">
         <div class="col-lg-12 body-content">

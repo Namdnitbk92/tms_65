@@ -71,3 +71,14 @@ if(!function_exists('is_admin')) {
         return $user->role === 1;
     }
 }
+
+if (!function_exists('fill_status_task')) {
+    function fill_status_task($status)
+    {
+        if ($status == 1) {
+            return trans("common.status.created");
+        } else {
+            return trans("common.status.finish");
+        }
+    }
+}

@@ -456,3 +456,74 @@ $(document).ready(function () {
     loginBuilder.build();
     courseBuilder.build();
 })
+
+// select multi
+$("#data_grid").on('click', '#checkAll', function () {
+    $('.case').prop('checked', this.checked);
+});
+
+$(".case").click(function () {
+    if ($(".case").length == $(".case:checked").length) {
+        $("#checkAll").prop("checked", "checked");
+    } else {
+        $("#checkAll").removeAttr("checked");
+    }
+});
+
+//  Delete multi subject
+$('#btn_del_subject').click(function () {
+    var ids = [];
+    $('.case:checked').each(function () {
+        ids.push($(this).val());
+    });
+
+    if (ids.length === 0) { //tell you if the array is empty
+        alert("No subjects were selected?");
+    } else {
+        if (!confirm("Are you sure you want to delete this?")) {
+            return false;
+        } else {
+            $.ajax({
+                url: 'subjects/delete_multi',
+                type: 'POST',
+                data: {id: ids},
+                dateType: 'json',
+                success: function (response) {
+                    $('#data_grid').html(response['view']);
+                    alert("Delete multi subjects success!");
+                }
+            });
+
+            return true;
+        }
+    }
+});
+
+// Dellete multi tasks
+$('#btn_del_task').click(function () {
+    var ids = [];
+    $('.case:checked').each(function () {
+        ids.push($(this).val());
+    });
+
+    if (ids.length === 0) { //tell you if the array is empty
+        alert("No subjects were selected?");
+    } else {
+        if (!confirm("Are you sure you want to delete this?")) {
+            return false;
+        } else {
+            $.ajax({
+                url: 'tasks/delete_multi',
+                type: 'POST',
+                data: {id: ids},
+                dateType: 'json',
+                success: function (response) {
+                    $('#data_grid').html(response['view']);
+                    alert("Delete multi tasks success!");
+                }
+            });
+
+            return true;
+        }
+    }
+});
