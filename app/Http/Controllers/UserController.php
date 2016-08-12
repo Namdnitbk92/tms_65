@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Repositories\Course\CourseRepository;
+use  App\Repositories\BaseRepositoryInterface;
 
 class UserController extends Controller
 {
@@ -67,12 +68,16 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        $data = $this->courseRepository->getSubjectsOfUser();
+        if (isset($id))
+             return view($id);
+        $data = $this->courseRepository->getSubjectsOfUser(); dd($data);
         $subjects = collect([]);
-        foreach ($data as $element) {
-            if ($element->subject_id === intval($id)) {
-                $subjects->push($element);
-                break;
+        if(data !== null) {
+            foreach ($data as $element) {
+                if ($element->subject_id === intval($id)) {
+                    $subjects->push($element);
+                    break;
+                }
             }
         }
 

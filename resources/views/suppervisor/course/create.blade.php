@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-
     <div class="row">
         <div class="col-lg-12 col-md-12 body-content">
             <h2 class="ui dividing header blue">
@@ -22,6 +21,7 @@
                                value="{{ render_field($course, 'description', null) }}">
                     </div>
                 </div>
+
                 <div class="two fields">
                     <div class="field">
                         <label>{{ trans('label.start_date') }}</label>
@@ -39,10 +39,11 @@
                     </div>
                     <div class="field">
                         <label>{{ trans('label.status') }}</label>
-                        <span class="ui red">{{ Form::select('size', config('common.status'), 1, ['name' => 'status']) }}</span>
+                        <span class="ui red">{{ Form::select('size', config('common.status'), $course ? $course->status : 1, ['name' => 'status']) }}</span>
                     </div>
                 </div>
             </div>
+ 
             <div class="field">
                 <div class="panel panel-default pl">
                     <div class="panel-heading">
@@ -54,23 +55,24 @@
                             <input type="checkbox" name="elementAll" style="margin-left:5px;">
                             <label>{{ trans('label.all') }}</label>
                         </div>
-                        @if(count($subjects) > 0)
+                        @if(isExists($subjects))
                             @foreach($subjects as $subject)
-                                @if(count($subjectsOfCourse) > 0)
-                                    @foreach($subjectsOfCourse as $soc)
-                                        <div class="ui checkbox subject-list" data="{{ $subject->id }}">
+                                @if(isExists($subjectsOfCourse))
+                                    <div class="ui list checkbox subject-list" data="{{ $subject->id }}">
+                                        <div class="item">
+                                        <?php $check = false ?>
+                                        @foreach($subjectsOfCourse as $soc)
                                             @if($soc->id == $subject->id)
-                                                <input belongCourse="true" element="true" type="checkbox"
-                                                       name="element{{ $subject->id }}" value="{{ $subject->id }}"
-                                                       style="margin-left:5px;">
-                                            @else
-                                                <input belongCourse="false" element="true" type="checkbox"
-                                                       name="element{{ $subject->id }}" value="{{ $subject->id }}"
-                                                       style="margin-left:5px;">
+                                               <?php $check = true ?>
+                                               @break;
                                             @endif
-                                            <label class="">{{ $subject->name }}</label>
-                                        </div>
-                                    @endforeach
+                                         @endforeach
+                                         <input belongCourse="{{ var_export($check) }}" element="true" type="checkbox"
+                                                       name="element{{ $subject->id }}" value="{{ $subject->id }}"
+                                                       style="margin-left:5px;">
+                                         <label class="">{{ $subject->name }}</label>
+                                        </div>    
+                                    </div>
                                 @else
                                     <div class="ui checkbox subject-list" data="{{ $subject->id }}">
                                         <input belongCourse="false" element="true" type="checkbox"
@@ -84,7 +86,8 @@
                     </div>
                 </div>
             </div>
-            @if(!empty($course))
+
+            @if(isExists($course))
                 <div class="field">
                     <input name="userInCourses" type="hidden"/>
                     <div class="panel panel-default pl">
@@ -94,58 +97,60 @@
                                 <value class="total-trainee"> 0 trainee in course</value>
                             </button>
                         </div>
-                        <div class="panel-body">
-                            @if(isset($trainees) && !empty($trainees))
+                        <div class="panel-body trainee-list" style="display:none;">
                                 <div class="ui middle aligned animated list">
-                                    @foreach($trainees as $trainee)
-                                        <div class="item">
-                                            <div class="right floated content">
-                                                <label class="ui label tag yellow">In Course</label>
-                                                <div class="ui buttons">
-                                                    <button class="ui button active red"
-                                                            onclick="removeTrainee('{{ $trainee->id }}')">
-                                                        <i class="minus square icon"></i>
-                                                    </button>
-                                                    <div class="or"></div>
-                                                    <button class="ui blue button"
-                                                            onclick="addTrainee('{{ $trainee->id }}')">
-                                                        <i class="add user icon"></i>
-                                                    </button>
+                                    @if(isExists($trainees))
+                                        @foreach($trainees as $trainee)
+                                            <div class="item">
+                                                <div class="right floated content">
+                                                    <label class="ui label tag yellow">In Course</label>
+                                                    <div class="ui buttons">
+                                                        <button class="ui button active red"
+                                                                onclick="courseBuilder.removeTrainee('{{ $trainee->id }}')">
+                                                            <i class="minus square icon"></i>
+                                                        </button>
+                                                        <div class="or"></div>
+                                                        <button class="ui blue button"
+                                                                onclick="courseBuilder.addTrainee('{{ $trainee->id }}')">
+                                                            <i class="add user icon"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <img class="ui avatar image"
+                                                     src="{{ empty($trainee->avatar) ? asset('images/trainee.png') : $trainee->avatar}}">
+                                                <div class="content">
+                                                    <div class="header">{{ $trainee->name }}</div>
+                                                    <div class="field">{{ $trainee->email }}</div>
                                                 </div>
                                             </div>
-                                            <img class="ui avatar image"
-                                                 src="{{ empty($trainee->avatar) ? asset('images/trainee.png') : $trainee->avatar}}">
-                                            <div class="content">
-                                                <div class="header">{{ $trainee->name }}</div>
-                                                <div class="field">{{ $trainee->email }}</div>
-                                            </div>
-                                        </div>
-                                    @endforeach
-                                    @foreach($allTrainees as $trainee)
-                                        <div class="item">
-                                            <div class="right floated content">
-                                                <div class="ui buttons">
-                                                    <button class="ui button active red"
-                                                            onclick="removeTrainee('{{ $trainee->id }}')">
-                                                        <i class="minus square icon"></i>
-                                                    </button>
-                                                    <div class="or"></div>
-                                                    <button class="ui blue button"
-                                                            onclick="addTrainee('{{ $trainee->id }}')">
-                                                        <i class="add user icon"></i>
-                                                    </button>
+                                        @endforeach
+                                    @endif
+                                    @if(isExists($allTrainees))
+                                        @foreach($allTrainees as $trainee)
+                                            <div class="item " >
+                                                <div class="right floated content">
+                                                    <div class="ui buttons">
+                                                        <button class="ui button active red"
+                                                                onclick="courseBuilder.removeTrainee('{{ $trainee->id }}')">
+                                                            <i class="minus square icon"></i>
+                                                        </button>
+                                                        <div class="or"></div>
+                                                        <button class="ui blue button"
+                                                                onclick="courseBuilder.addTrainee('{{ $trainee->id }}')">
+                                                            <i class="add user icon"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <img class="ui avatar image"
+                                                     src="{{ empty($trainee->avatar) ? asset('images/trainee.png') : $trainee->avatar}}">
+                                                <div class="content">
+                                                    <div class="header">{{ $trainee->name }}</div>
+                                                    <div class="field">{{ $trainee->email }}</div>
                                                 </div>
                                             </div>
-                                            <img class="ui avatar image"
-                                                 src="{{ empty($trainee->avatar) ? asset('images/trainee.png') : $trainee->avatar}}">
-                                            <div class="content">
-                                                <div class="header">{{ $trainee->name }}</div>
-                                                <div class="field">{{ $trainee->email }}</div>
-                                            </div>
-                                        </div>
-                                    @endforeach
+                                        @endforeach
+                                    @endif
                                 </div>
-                            @endif
                         </div>
                     </div>
                 </div>
@@ -153,7 +158,7 @@
             <div class="two field">
                 <div class="field f-right">
                     <button type="submit" class="ui facebook submit blue icon button btn-ci">
-                        <i class="checkmark icon"></i> {{ empty($course) ? trans('label.create') : trans('label.update') }}
+                        <i class="checkmark icon"></i> {{ isExists($course) ? trans('label.create') : trans('label.update') }}
                     </button>
                 </div>
             </div>
@@ -162,31 +167,21 @@
     </div>
     <script>
         var total_trainee = [];
-        function initTrainee() {
-            @if(isset($trainees))
-                @foreach($trainees as $trainee)
-                    total_trainee.push('{{ $trainee->id }}');
-            @endforeach
-        @endif
-        $('.total-trainee').text(total_trainee.length + ' trainee in course');
-        }
-
-        function removeTrainee(userId) {
-            var index = _.indexOf(total_trainee, userId);
-            if (index != -1) {
-                $('.btn-trainee').transition('jiggle');
-                total_trainee.splice(_.indexOf(total_trainee, userId), 1);
+         var interval = setInterval(function(){
+            if (document.readyState === "complete") {
+                clearInterval(interval);
+                 function initTrainee() {
+                    @if(isset($trainees))
+                        @foreach($trainees as $trainee)
+                            total_trainee.push('{{ $trainee->id }}');
+                        @endforeach
+                    @endif
+                    $('.total-trainee').text(total_trainee.length + ' trainee in course');
+                }
+                initTrainee();
+                $('.trainee-list').toggle(1500);
             }
-            $('.total-trainee').text(total_trainee.length + ' trainee in course');
-        }
-
-        function addTrainee(userId) {
-            if (!_.contains(total_trainee, userId)) {
-                $('.btn-trainee').transition('jiggle');
-                total_trainee.push(userId);
-            }
-            $('.total-trainee').text(total_trainee.length + ' trainee in course');
-        }
-        initTrainee();
+        },200);
+       
     </script>
 @endsection

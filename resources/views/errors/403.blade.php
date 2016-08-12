@@ -24,6 +24,7 @@
             text-align: center;
             display: table-cell;
             vertical-align: middle;
+            background-color : #ddd;
         }
 
         .content {
@@ -34,13 +35,15 @@
         .title {
             font-size: 72px;
             margin-bottom: 40px;
+            width : 600px;
         }
     </style>
 </head>
 <body>
 <div class="container">
     <div class="content">
-        <div class="title">You don't have permission to save in this location</div>
+        <!-- <div class="title">You don't have permission to save in this location</div> -->
+        <img class="title" src="{{ asset('images\404.jpg') }}"/>
     </div>
 </div>
 </body>

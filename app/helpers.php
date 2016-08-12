@@ -27,6 +27,13 @@ if (!function_exists('render_field')) {
     }
 }
 
+if (!function_exists('isExists')) {
+    function isExists($obj)
+    {
+        return isset($obj) && !empty($obj);
+    }
+}
+
 if (!function_exists('show_entry')) {
     function show_entry($records)
     {
@@ -68,7 +75,11 @@ if (!function_exists('fill_status')) {
 if(!function_exists('is_admin')) {
     function is_admin($user)
     {
-        return $user->role === 1;
+        if(isset($user)) {
+            return $user->role === 1;
+        }
+        
+        return false;
     }
 }
 

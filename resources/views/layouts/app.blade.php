@@ -39,7 +39,7 @@
                 @else
                     <div class="ui simple dropdown item dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                            {!! Html::image(Auth::user()->avatar, null , ['class' => 'avatar']) !!}
+                            {!! Html::image(Auth::user()->avatar ? Auth::user()->avatar : asset('images\trainee.png'), null , ['class' => 'avatar']) !!}
                             {{ Auth::user()->name }}<span class="caret"></span>
                         </a>
                         <div class="menu">
@@ -54,10 +54,6 @@
                                     {{ link_to_route('users.edit', trans('user.profile'),  Auth::user()->id, ['class' => 'fa fa-btn fa-user fa-fw']) }}
                                 @endif
                             </div>
-                            <a class="item" href="{{ route('contact') }}">
-                                <i class="fa fa-btn fa-bolt fa-fw"></i>
-                                {{ trans('label.contact') }}
-                            </a>
                             <a class="item" href="{{ route('contact') }}">
                                 <i class="fa fa-btn fa-bolt fa-fw"></i>
                                 {{ trans('label.contact') }}
@@ -93,5 +89,7 @@
 <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
 <script src="http://formvalidation.io/vendor/formvalidation/js/formValidation.min.js"></script>
 <script src="http://formvalidation.io/vendor/formvalidation/js/framework/bootstrap.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/4.2.6/highcharts.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/4.2.6/highcharts-3d.js"></script>
 </body>
 </html>

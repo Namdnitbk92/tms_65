@@ -18,6 +18,7 @@ Route::get('/', function () {
 Route::auth();
 
 Route::get('/home', 'HomeController@index');
+    
 
 Route::group(['middleware' => 'web'], function () {
     Route::get('/' , ['as' =>'home', 'uses' => 'HomeController@index']);
@@ -40,7 +41,7 @@ Route::group(['middleware' => 'web'], function () {
     });
 
     Route::group(['middleware' => 'isAdmin'], function () {
-        Route::resource('admin', 'AdminController');
+       
 
         Route::get('admin/{id}/profile', [
             'as' => 'admin.profile',
@@ -78,7 +79,7 @@ Route::group(['middleware' => 'web'], function () {
                 'uses' => 'CourseController@assignTrainee'
             ]);
 
-            Route::get('admin/contact', [
+            Route::get('contact', [
                 'as' => 'contact',
                 'uses' => 'HomeController@contact',
             ]);
@@ -109,6 +110,8 @@ Route::group(['middleware' => 'web'], function () {
                 ]);
             });
         });
+
+         Route::resource('admin', 'AdminController');
     });
 
     Route::group(['middleware' => 'isUser'], function () {
