@@ -223,4 +223,15 @@ class CourseController extends Controller
 
         return response()->json(['message' => 'Assign Trainee Successfully!']);
     }
+
+    public function getProgressByCourse(Request $request)
+    {
+        $id = $request->input('course_id');
+        $result = [];
+        if(isExists ($id)) {
+            $result = $this->courseRepository->getProgressOfUserByCourse($id);
+        }
+
+        return response()->json($result);
+    }
 }

@@ -2,9 +2,15 @@
     <div class="sidebar-nav navbar-collapse">
         <ul class="nav in" id="side-menu">
             <li>
-                <a href="{{ route('dashboard') }}" class="active"><i class="fa fa-dashboard fa-fw"></i>
-                    {{ trans('label.dashboard') }}
-                </a>
+                @can('is_admin', Auth::user())
+                    <a href="{{ route('dashboard') }}" class="active"><i class="fa fa-dashboard fa-fw"></i>
+                        {{ trans('label.dashboard') }}
+                    </a>
+                @else
+                    <a href="{{ route('dashboardUser') }}" class="active"><i class="fa fa-dashboard fa-fw"></i>
+                        {{ trans('label.dashboard') }}
+                    </a>
+                @endcan
             </li>
             <li class="">
                 <a href="#">

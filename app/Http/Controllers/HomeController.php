@@ -43,4 +43,15 @@ class HomeController extends Controller
 
         return response()->json(['data' => $this->getActivity()]);
     }
+
+    public function showDashBoardUser()
+    {
+        $courses = auth()->user()->courses()->get();
+        $data = [];
+        foreach ($courses as $course) {
+            array_push($data, [$course->id => $course->name]);
+        }
+
+        return view('layouts.dashboard', ['course' => $data]);
+    }
 }

@@ -47,8 +47,8 @@
                         <div class="ui middle aligned selection list">
                             @if(count($subjects) > 0)
                                 @foreach($subjects as $subject)
-                                    <div class="item" onclick="courseBuilder.utils().redirect(&quot;{{ route('') }}&quot;)">
-                                        <img class="ui avatar image" src="{{ asset('images/landing-page.jpg') }}">
+                                    <div class="item" onclick="courseBuilder.utils().redirect(&quot;{{ route('admin.subjects.show', ['id' => $subject->id]) }}&quot;)">
+                                        <img class="ui avatar image" src="{{ asset('images/subject.png') }}">
                                         <div class="content">
                                             <div class="header">{{ $subject->name }}</div>
                                         </div>

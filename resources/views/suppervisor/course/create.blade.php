@@ -101,7 +101,7 @@
                                 <div class="ui middle aligned animated list">
                                     @if(isExists($trainees))
                                         @foreach($trainees as $trainee)
-                                            <div class="item">
+                                            <div class="item" onclick="courseBuilder.utils().redirect(&quot;{{ route('admin.profile', ['id' => $trainee->id]) }}&quot;)">
                                                 <div class="right floated content">
                                                     <label class="ui label tag yellow">In Course</label>
                                                     <div class="ui buttons">

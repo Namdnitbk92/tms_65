@@ -15,53 +15,46 @@
                 <activities style="display:none;"></activities>
             </div>
             <div class="ui two column stackable grid">
+                @can('is_user', Auth::user())
                 <div class="column">
                     <div class="ui segment">
                         <h4 class="ui horizontal divider header blue">
                           <i class="tag icon"></i>
-                          Progress (Course Laravel)
+                          Progress
                         </h4>
-                        <div class="field">
-                            <label>Courses</label>
-                             <div class="progress">
-                                <div name="progress" class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:50%">
-                                   50%
+                        <div class="ui active centered inline loader loading-ajax" ></div>
+                        <div class="progress-content" >
+                            <div class="field">
+                                @if(isset($course))
+                                    {{ Form::select('size', $course, 'please select course', ['name' => 'course']) }}
+                                @endif
+                            </div>
+                            <div class="field">
+                                <label>Courses</label>
+                                <div class="progress">
+                                    <div name="progress-course" class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" >
+                                        <progress-course></progress-course>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                         <div class="field">
-                            <label>Subject</label>
-                             <div class="progress">
-                                <div name="progress" class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:50%">
-                                   50%
+                            <div class="field">
+                                <label>Subject</label>
+                                <div class="progress progress-subject">
+
                                 </div>
                             </div>
-                        </div>
-                        <div class="field">
-                            <label>Task</label>
-                             <div class="progress">
-                                <div name="progress" class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:50%">
-                                   50%
+                            <div class="field">
+                                <label>Task</label>
+                                <div class="progress progress-task">
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                @endcan
                 <div class="column">
                     <div class="ui segment">
                         <div id="subject"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="ui two column stackable grid">
-                <div class="column">
-                    <div class="ui segment">
-                        <div id="course_survey"></div>
-                    </div>
-                </div>
-                <div class="column">
-                    <div class="ui segment">
-                        <div id="subject_survey"></div>
                     </div>
                 </div>
             </div>

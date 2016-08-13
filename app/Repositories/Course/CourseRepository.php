@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Course;
 
+use App\Models\CourseSubject;
 use App\Models\UserSubject;
 use DB;
 use App\Services\Utils;
@@ -97,7 +98,11 @@ class CourseRepository extends BaseRepository
             $user_courses = $course->user_course()->get();
             if(intval($data['status']) === 2 && !empty($user_courses) && !empty($subjects)) {
                 foreach ($user_courses as $user) {
-                    $user->subjects()->sync($subjects);
+                    $arr = [];
+                    foreach ($subjects as $s) {
+                        $arr[$s] = ['status' => 2];
+                    }
+                    $user->subjects()->sync($arr);
                 }
             }
         } catch (Exception $e) {
@@ -237,9 +242,13 @@ class CourseRepository extends BaseRepository
         return $courses;
     }
 
-    public function finishSubject($id)
+    public function finishSubject($id, $course_id)
     {
         try {
+            DB::beginTransaction();
+            $userid = auth()->user()->id;
+            $user_course = UserCourse::where(['course_id' => $course_id, 'user_id' => $userid])->first();
+            $totalSubjects = CourseSubject::where('course_id', $course_id)->count();
             $user_subject = UserSubject::findOrFail($id);
             $val = explode('/',$user_subject->progress);
             if(sizeof($val) == 2) {
@@ -247,11 +256,29 @@ class CourseRepository extends BaseRepository
             } else {
                 $percent = 0;
             }
+
             if($percent < 1) {
                 return false;
             }
+
             $user_subject->status = 4;//set status to finish
             $user_subject->save();
+
+            if(isExists($user_course)) {
+                $subjects = $this->getSubjectsOfUser();
+                $totalFinish = $subjects->map(function ($subject) {
+                    if($subject->status == 4) {
+                        return 1;
+                    }
+
+                    return 0;
+                });
+                $totalFinish = $totalFinish->sum();
+                if($totalSubjects != 0) {
+                    $user_course->progress = $totalFinish / $totalSubjects * 100;
+                    $user_course->save();
+                }
+            }
 
             $this->logToActivity(
                 auth()->user()->id,
@@ -259,11 +286,32 @@ class CourseRepository extends BaseRepository
                 UserSubject::class,
                 config('common.action_type.finish')
             );
+
         } catch (Exception $e) {
+            DB::rollBack();
             return false;
         }
+        DB::commit();
 
         return true;
+    }
+
+    public function getProgressOfUserByCourse($id)
+    {
+
+        $user = auth()->user();
+        $course = UserCourse::where(['user_id' => $user->id, 'course_id' => $id])->first();
+        $subjects = $this->getSubjectsOfUser();
+        if(!isExists($course) || !isExists($user)) {
+            return;
+        }
+
+        return [
+            'course' => $course->progress,
+            'subjects' => isExists($subjects) ? $subjects->map(function($subject) {
+                return $subject->progress;
+            }) : []
+        ];
     }
 
     public function getSubjects($limit = null)
@@ -300,7 +348,16 @@ class CourseRepository extends BaseRepository
                 $temp->progress = $user_subject->progress;
                 $temp->subject_name = $subject->name;
                 $temp->description = $subject->description;
+                if(is_string($temp->progress) && strlen($temp->progress) > 0) {
+                    $progress = explode('/', $temp->progress);
+                    if (sizeof($progress) == 2 && $progress[1] != 0) {
+                        $progress = $progress[0] / $progress[1];
+                    }
+                } else {
+                    $progress = 0;
+                }
 
+                $temp->progress = round($progress*100);
                 return $temp;
             } 
 

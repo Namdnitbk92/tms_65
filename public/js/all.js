@@ -505,9 +505,46 @@ var courseBuilder = (function () {
 
 var activities = (function(){
     return {
+        getProcess : function (id) {
+            if(!id)
+                return;
+
+            $.ajax({
+                url: 'getProgressByCourse',
+                data : {
+                    course_id : id ,
+                },
+                type: 'POST',
+            }).done(function (res) {
+                console.log(res);
+                $('.loading-ajax').hide();
+                var display = $('.progress-content').css('display');
+                $('.progress-content').toggle(1000);
+                $('.progress-content').toggle(1000);
+                if(courseBuilder.utils().isset(res)) {
+                    $('div[name="progress-course"]').attr('aria-valuenow', parseInt(res.course));
+                    $('div[name="progress-course"]').css('width', parseInt(res.course) + '%');
+                    $('progress-course').text(res.course + ' %');
+
+                    if(res.subjects) {
+                        var obj = res.subjects;
+                        for(var s in obj) {
+                            var content = '<div name="progress-subject" class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" >';
+                            content += '<progress-subject></progress-subject></div>';
+                            $('.progress-subject').append(content);
+                            $('div[name="progress-subject"]').attr('aria-valuenow', parseInt(obj[s]));
+                            $('div[name="progress-subject"]').css('width', parseInt(obj[s]) + '%');
+                            $('progress-subject').text(obj[s] + ' %');
+                        }
+                    }
+                }
+            });
+        },
         build: function () {
+            var parent = this;
             var element = $('activities');
             var html_text = '';
+            this.getProcess(1);
             $.ajax({
                 url: 'getActivities',
                 type: 'POST',
@@ -519,7 +556,6 @@ var activities = (function(){
                         if(!line['active_user_avatar']) 
                             line['active_user_avatar'] = 'images/trainee.png';
 
-                        console.log(line['active_user_avatar'])
                         html_text = '<div class="ui feed"><div class="event"><div class="label">';
                         html_text = '<div class="ui feed"><div class="event"><div class="label">';
                         html_text += '<img src="' + line['active_user_avatar'] + '"></div>';
@@ -533,6 +569,10 @@ var activities = (function(){
                     $('.loading-ajax').hide();
                     element.show(5000);
                 }
+            })
+
+            $('select[name="course"]').change(function(){
+                parent.getProcess($('select[name="course"]').val());
             })
 
             //init chart
@@ -603,11 +643,54 @@ var activities = (function(){
     }
 }());
 
+var trainee = (function(){
+    return {
+        finish : function (id, course_id) {
+            $('#_modal').modal('show');
+            $('#_modal').attr('_id', id);
+            $('#_modal').attr('course_id', course_id);
+        },
+        event : function () {
+            $('.btn-finish').popup({
+                position : 'top left',
+                content : 'Finish Subject'
+            })
+
+            $('.btn-info-subject').popup({
+                position : 'top left',
+                content : 'View information of subject'
+            })
+
+            $('.btn-cf').click(function(){
+                var userSubjectId = $('#_modal').attr('_id');
+                var course_id = $('#_modal').attr('course_id');
+                $.ajax({
+                    url : 'finishSubject',
+                    type : 'POST',
+                    data : {
+                        id : userSubjectId,
+                        course_id : course_id
+                    },
+                    dataType : 'json',
+                    beforeSend : function () {}
+                }).done(function(res) {
+                    $('.result-msg').show(1000);
+                    $('.result-msg-content').text(res.messsage);
+                    $('#_modal').modal('hide');
+                });
+            });
+        },
+        build : function() {
+            this.event();
+        }
+    }
+}())
+
 $(document).ready(function () {
     (new appBuilder()).initLib();
     loginBuilder.build();
     courseBuilder.build();
-
+    trainee.build();
     // select multi
     $("#data_grid").on('click', '#checkAll', function () {
         $('.case').prop('checked', this.checked);

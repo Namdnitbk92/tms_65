@@ -40,6 +40,11 @@ Route::group(['middleware' => 'web'], function () {
         ]);
     });
 
+    Route::post('getProgressByCourse', [
+        'as' => 'getProgressByCourse',
+        'uses' => 'CourseController@getProgressByCourse'
+    ]);
+
     Route::group(['middleware' => 'isAdmin'], function () {
        
 
@@ -117,9 +122,19 @@ Route::group(['middleware' => 'web'], function () {
     Route::group(['middleware' => 'isUser'], function () {
         Route::resource('users', 'UserController');
         Route::resource('user.subject', 'UserController', ['only' => ['index', 'show']]);
-        Route::post('user/finishSubject', [
+        Route::post('user/{id}/finishSubject', [
             'as' => 'finishSubject',
             'uses' => 'UserController@finishSubject'
+        ]);
+
+        Route::get('/dashboard', [
+            'as' => 'dashboardUser',
+            'uses' => 'HomeController@showDashBoardUser'
+        ]);
+
+        Route::post('/getActivities', [
+            'as' => 'getActivities',
+            'uses' => 'HomeController@getActivities'
         ]);
 
         Route::group(['namespace' => 'User'], function () {

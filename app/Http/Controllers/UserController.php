@@ -105,7 +105,6 @@ class UserController extends Controller
             return redirect()->route('users.edit')->withError($ex->getMessage());
         }
 
-
     }
 
     public function finishSubject(Request $request)
@@ -115,9 +114,10 @@ class UserController extends Controller
             $msg = 'Can"t finish subject without id';
         } else {
             $id = $request->input('id');
+            $course_id = $request->input('course_id');
             $msg = 'Finish Subject Id : ' . $id . 'successfully';
             if ($request->ajax()) {
-                $result = $this->courseRepository->finishSubject($id);
+                $result = $this->courseRepository->finishSubject($id, $course_id);
                 if (!$result) {
                     $msg = 'Finish subject id' . $id . 'errors';
                 }

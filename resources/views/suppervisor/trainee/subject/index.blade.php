@@ -48,8 +48,6 @@
                         </div>
                     </div>
                     <table class="responstable">
-                    @if(isExists($subjects))
-                        <?php dd($subjects)?>
                         <tbody>
                         <tr>
                             <th>Id</th>
@@ -83,7 +81,7 @@
                                             </button>
                                             @if(app('request')->input('view_subject_of_user'))
                                             <button class="ui circular red icon button btn-finish"
-                                                    onclick="finish('{{$subject->id}}')">
+                                                    onclick="trainee.finish('{{$subject->id}}', '{{ $subject->course_id }}')">
                                                 <i class="check icon"></i>
                                             </button>
                                             @endif
@@ -97,56 +95,21 @@
                             </tr>
                         @endif
                         </tbody>
-                        @else
-                            <tr class="center">Data Empty</tr>
-                        @endif
                     </table>
-                    @if(isExists($subjects))
-                        @if(!app('request')->input('view_subject_of_user'))
+                    @if(!app('request')->input('view_subject_of_user'))
                         {{ Form::open(['method' => 'GET', 'route' => ['user.subject.index', 'user' => auth()->user()->id], 'name' => 'show-entry']) }}
                             <input type="hidden" name="entry"/>
                         {{ Form::close() }}
                         {!! show_entry($subjects) !!}
-                        @endif
-                    @endif   
+                    @endif
                 </div>
             </div>
         </div>
     </div>
-    @include('common.confirm', [
-        'title' => 'Notifcation',
-        'content' => 'Are you sure ?'
+    @include('common.confirm',[
+         'title' => 'Notification',
+         'content' => 'Are you sure finish subject?'
     ])
     <script>
-        $('.btn-finish').popup({
-            position : 'top left',
-            content : 'Finish Subject'
-        })
-
-        $('.btn-info-subject').popup({
-            position : 'top left',
-            content : 'View information of subject'
-        })
-
-        function finish(id){
-            $('.confirmModal').modal('show');
-            $('.confirmModal').attr('_id', id);
-        }
-        $('#btn-confirm').click(function(){
-            var userSubjectId = $('.confirmModal').attr('_id');
-            $.ajax({
-                url : '{{ route('finishSubject') }}',
-                type : 'POST',
-                data : {
-                    id : userSubjectId
-                },
-                dataType : 'json',
-                beforeSend : function () {}
-            }).done(function(res) {
-                $('.result-msg').show(1000);
-                $('.result-msg-content').text(res.messsage);
-                $('.confirmModal').modal('hide');
-            });
-        });
     </script>
 @endsection
