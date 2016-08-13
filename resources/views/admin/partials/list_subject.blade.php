@@ -52,8 +52,7 @@
     </tbody>
 </table>
 
-<div id="pagination" class="pull-right">
-    @if(count($listSubjects) > 0)
-        {{ $listSubjects->render() }}
-    @endif
+<div id="pagination">
+    @include('admin.partials.pagination', ['listItems' => $listSubjects])
 </div>
+

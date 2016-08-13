@@ -15,4 +15,7 @@ return [
 
     'previous' => '&laquo; Previous',
     'next'     => 'Next &raquo;',
+    'display'     => 'Display',
+    'items'     => 'items',
+    'item'     => 'item',
 ];

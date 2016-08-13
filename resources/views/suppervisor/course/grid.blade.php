@@ -10,7 +10,7 @@
     @endcan
     @can('is_user', Auth::user())
         <button class="ui circular blue icon button my-course"
-                onclick="courseBuilder.utils().redirect(&quot;{{route('admin.courses.index', ['view_course_of_user' => true])}}&quot;)">
+                onclick="courseBuilder.utils().redirect(&quot;{{ route('users.courses.index', ['view_course_of_user' => true])}}&quot;)">
             <i class="list layout icon"></i>
         </button>
     @endcan
@@ -67,23 +67,33 @@
                 <td>{!! fill_status($course->status) !!}</td>
                 <td>
                     <div class="two field">
-                        <div class="field">
-                            <button class="ui circular facebook icon button" onclick="courseBuilder.utils().redirect(&quot;{{ route('admin.courses.edit', ['course' => $course->id]) }}&quot;)">
-                                <i class="fa fa-edit"></i>
-                            </button>
-                            <button class="ui circular twitter icon button" onclick="courseBuilder.utils().redirect(&quot;{{ route('admin.courses.show', ['course' => $course->id]) }}&quot;)">
-                                <i class="info icon"></i>
-                            </button>
-                        </div>
-                        <div class="field">
-                            <button class="ui circular red icon button del-course" type="submit" onclick="courseBuilder.saveSelect('{{ $course->id }}')">
-                                <i class="trash icon"></i>
-                            </button>
-                            <button class="ui circular yellow icon button btn-assign"
-                                    onclick="courseBuilder.openAssign('{{ $course->name }}', '{{ $course->id }}')">
-                                <i class="add user icon"></i>
-                            </button>
-                        </div>
+                        @can('check_CRUD_course', Auth::user())
+                            <div class="field">
+                                <button class="ui circular facebook icon button" onclick="courseBuilder.utils().redirect(&quot;{{ route('admin.courses.edit', ['course' => $course->id]) }}&quot;)">
+                                    <i class="fa fa-edit"></i>
+                                </button>
+                                <button class="ui circular twitter icon button" onclick="courseBuilder.utils().redirect(&quot;{{ route('admin.courses.show', ['course' => $course->id]) }}&quot;)">
+                                    <i class="info icon"></i>
+                                </button>
+                            </div>
+                            <div class="field">
+                                <button class="ui circular red icon button del-course" type="submit" onclick="courseBuilder.saveSelect('{{ $course->id }}')">
+                                    <i class="trash icon"></i>
+                                </button>
+                                <button class="ui circular yellow icon button btn-assign"
+                                        onclick="courseBuilder.openAssign('{{ $course->name }}', '{{ $course->id }}')">
+                                    <i class="add user icon"></i>
+                                </button>
+                            </div>
+                        @else
+                            <div class="field">
+                                <button class="ui circular twitter icon button" onclick="courseBuilder.utils().redirect(&quot;{{ route('users.courses.show', ['course' => $course->id]) }}&quot;)">
+                                    <i class="info icon"></i>
+                                </button>
+                            </div>
+                            <div class="field">
+                            </div>
+                        @endcan
                      </div>
                 </td>
             </tr>

@@ -12,13 +12,13 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3>Subjects List</h3>
-                    <i class="fa fa-refresh" onclick="courseBuilder.utils().redirect(&quot;{{ route('user.subject.index', ['user' => Auth::user()->id]) }}&quot;)"></i>
+                    <i class="fa fa-refresh" onclick="courseBuilder.utils().redirect(&quot;{{ route('users.subjects.index', ['user' => Auth::user()->id]) }}&quot;)"></i>
                 </div>
                 <div class="panel-body">
                     <div class="responstable-toolbar">
                         @can('is_user', Auth::user())
                             <button class="ui circular blue icon button my-subject"
-                                    onclick="courseBuilder.utils().redirect(&quot;{{ route('user.subject.index', ['user' => Auth::user()->id, 'view_subject_of_user' => true]) }}&quot;)">
+                                    onclick="courseBuilder.utils().redirect(&quot;{{ route('users.subjects.index', ['user' => Auth::user()->id, 'view_subject_of_user' => true]) }}&quot;)">
                                 <i class="list layout icon"></i>
                             </button>
                         @endcan
@@ -78,7 +78,7 @@
                                     <td>
                                         <div class="field">
                                             <button class="ui circular twitter icon button btn-info-subject"
-                                                    onclick="courseBuilder.utils().redirect(&quot;{{route('user.subject.show', ['user' => auth()->user()->id, 'subject' => $subject->subject_id])}}&quot;)">
+                                                    onclick="courseBuilder.utils().redirect(&quot;{{route('users.subjects.show', ['user' => auth()->user()->id, 'subject' => $subject->subject_id])}}&quot;)">
                                                 <i class="info icon"></i>
                                             </button>
                                             @if(app('request')->input('view_subject_of_user'))

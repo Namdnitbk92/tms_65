@@ -13,41 +13,47 @@
                     <span class="fa arrow"></span>
                 </a>
             </li>
-            <li>
-                <a href="{{ route('admin.courses.index') }}">
-                    <i class="fa fa-table fa-fw"></i>
-                    {{ trans('label.course') }}
-                </a>
-            </li>
-            <li>
-                @can('is_user', Auth::user())
-                <a href="{{ route('user.subject.index', ['user' => auth()->user()->id]) }}">
-                    <i class="fa fa-book fa-fw"></i>
-                    {{ trans('label.subject') }}
-                </a>
-                @else
-                {!! Html::decode(link_to_route(
-                    'admin.subjects.index',
-                    '<i class="fa fa-book fa-fw"></i> ' . trans('label.subject')
-                )) !!}
-                @endcan
-            </li>
             @can('is_admin', Auth::user())
-            <li>
-                {!! Html::decode(link_to_route(
-                    'admin.tasks.index',
-                    '<i class="fa fa-tasks fa-fw"></i> ' . trans('label.task')
-                )) !!}
-            </li>
+                <li>
+                    <a href="{{ route('admin.courses.index') }}">
+                        <i class="fa fa-table fa-fw"></i>
+                        {{ trans('label.course') }}
+                    </a>
+                </li>
+                <li>
+                    {!! Html::decode(link_to_route(
+                        'admin.subjects.index',
+                        '<i class="fa fa-book fa-fw"></i> ' . trans('label.subject')
+                    )) !!}
+                </li>
+                <li>
+                    {!! Html::decode(link_to_route(
+                        'admin.tasks.index',
+                        '<i class="fa fa-tasks fa-fw"></i> ' . trans('label.task')
+                    )) !!}
+                </li>
+
             @endcan
             @can('is_user', Auth::user())
-            <li>
-                {!! Html::decode(link_to_route(
-                    'users.tasks.index',
-                    '<i class="fa fa-tasks fa-fw"></i> ' . trans('label.task'),
-                    [Auth::user()->id]
-                )) !!}
-            </li>
+                <li>
+                    <a href="{{ route('users.courses.index') }}">
+                        <i class="fa fa-table fa-fw"></i>
+                        {{ trans('label.course') }}
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('users.subjects.index', ['user' => auth()->user()->id]) }}">
+                        <i class="fa fa-book fa-fw"></i>
+                        {{ trans('label.subject') }}
+                    </a>
+                </li>
+                <li>
+                    {!! Html::decode(link_to_route(
+                        'users.tasks.index',
+                        '<i class="fa fa-tasks fa-fw"></i> ' . trans('label.task'),
+                        [Auth::user()->id]
+                    )) !!}
+                </li>
             @endcan
         </ul>
     </div>

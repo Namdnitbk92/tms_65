@@ -10,13 +10,18 @@
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.2/semantic.min.css">
     <link rel="stylesheet" href="http://formvalidation.io/vendor/formvalidation/css/formValidation.min.css">
+    @yield('css')
 </head>
 <body id="app-layout">
 <nav class="navbar navbar-default navbar-static-top">
     <div class="container">
         <div class="navbar-header">
             <i class="fa fa-dropbox"></i>
-            <a href="{{ url('/') }}"> {{ trans('label.app_name') }} </a>
+            @can('is_admin', Auth::user())
+                <a href="{{ url('admin/home') }}"> {{ trans('label.app_name') }} </a>
+            @else
+                <a href="{{ url('users/home') }}"> {{ trans('label.app_name') }} </a>
+            @endcan
         </div>
 
         <div class="collapse navbar-collapse" id="app-navbar-collapse">

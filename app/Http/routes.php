@@ -17,11 +17,16 @@ Route::get('/', function () {
 
 Route::auth();
 
-Route::get('/home', 'HomeController@index');
-    
-
 Route::group(['middleware' => 'web'], function () {
-    Route::get('/' , ['as' =>'home', 'uses' => 'HomeController@index']);
+    Route::get('users/home', [
+        'as' => 'users.home',
+        'uses' => 'HomeController@index'
+    ]);
+
+    Route::get('admin/home', [
+        'as' => 'admin.home',
+        'uses' => 'HomeController@index'
+    ]);
 
     Route::get('register/verify/{confirmation_code}', [
         'as' => 'user.active',
@@ -43,8 +48,6 @@ Route::group(['middleware' => 'web'], function () {
     });
 
     Route::group(['middleware' => 'isAdmin'], function () {
-       
-
         Route::get('admin/{id}/profile', [
             'as' => 'admin.profile',
             'uses' => 'AdminController@profile'
@@ -117,8 +120,32 @@ Route::group(['middleware' => 'web'], function () {
     });
 
     Route::group(['middleware' => 'isUser'], function () {
+
+        Route::group(['prefix' => 'users'], function () {
+            Route::group(['namespace' => 'User'], function () {
+                Route::resource('courses', 'CourseController');
+
+                Route::post('courses/search', [
+                    'as' => 'search',
+                    'uses' => 'CourseController@search'
+                ]);
+
+                Route::get('course/exportExcel', [
+                    'as' => 'exportExcel',
+                    'uses' => 'CourseController@exportExcel'
+                ]);
+
+                Route::get('course/exportCSV', [
+                    'as' => 'exportCSV',
+                    'uses' => 'CourseController@exportCSV'
+                ]);
+            });
+        });
+
         Route::resource('users', 'UserController');
-        Route::resource('user.subject', 'UserController', ['only' => ['index', 'show']]);
+
+        Route::resource('users.subjects', 'UserController', ['only' => ['index', 'show']]);
+        
         Route::post('user/finishSubject', [
             'as' => 'finishSubject',
             'uses' => 'UserController@finishSubject'
@@ -137,12 +164,5 @@ Route::group(['middleware' => 'web'], function () {
                 'uses' => 'TaskController@finishTask'
             ]);
         });
-    });
-
-    Route::group(['prefix' => 'users'], function () {
-        Route::get('home', [
-            'as' => 'home',
-            'uses' => 'HomeController@index'
-        ]);
     });
 });

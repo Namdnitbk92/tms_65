@@ -32,7 +32,9 @@ class AuthController extends Controller
      * @var string
      */
     protected $redirectTo = '/';
-//    protected $redirectPath = '/home';
+//    protected $redirectPath = 'users/home';
+    protected $redirectPathUser = 'users/home';
+    protected $redirectPathAdmin = 'admin/home';
 
     /**
      * Create a new authentication controller instance.
@@ -133,7 +135,7 @@ class AuthController extends Controller
         }
 
         $credentials = $this->getCredentials($request);
-        /*$credentials['confirmed'] = 1;*/
+        $credentials['confirmed'] = 1;
 
         if (Auth::guard($this->getGuard())->attempt($credentials, $request->has('remember'))) {
             return $this->handleUserWasAuthenticated($request, $throttles);
@@ -151,12 +153,11 @@ class AuthController extends Controller
         return $this->sendFailedLoginResponse($request);
     }
 
-    /*public function redirectPath()
+    public function redirectPath()
     {
         if (is_admin(auth()->user())) {
-            return redirect();
+            return $this->redirectPathAdmin;
         }
-        return redirect()->route('home');
-
-    }*/
+        return $this->redirectPathUser;
+    }
 }
